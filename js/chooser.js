@@ -250,10 +250,18 @@ function updateConfigs ()
             configs["project-jurisdiction"]);
 
     /* fsfe compliance changes */
-    if ( configs["fsfe-compliance"] )
+    if ( configs["fsfe-compliance"] == 'fsfe-compliance' )
       $('#fsfe-compliance').val(configs["fsfe-compliance"] );
+    // this might have unintended side effects
+        if ( doDebug )
+            console.log("non-fsfe-compliance: " +
+                configs["fsfe-compliance"]);
+    else
+      $('#fsfe-compliance').val(configs["non-fsfe-compliance"] );
+      $('#non-fsfe-compliance').addClass('active')
+      $('#fsfe-compliance').removeClass('active')
     if ( doDebug )
-        console.log("fsfe-compliance: " +
+        console.log("non-fsfe-compliance: " +
             configs["fsfe-compliance"]);
 
     /* copyright */
@@ -468,6 +476,7 @@ function setFakeData ()
     configs['project-email']             = 'jon@fabricatorz.com';
     configs['process-url']   =
         'http://archive.fabricatorz.com/signing';
+    configs['fsfe-compliance'] = 'non-fsfe-compliance';
     configs['project-jurisdiction']      =
         'United States, Hong Kong, and China Mainland.';
 }
@@ -989,7 +998,9 @@ function testGeneralPage ()
 {
             isGeneralPageOk = true;
             if(!$("#fsfe-compliance").val() );
-            var fsfeCompliance    = $( "#fsfe-compliance" ).val();
+            // this should fix fsfe / non fsfe value
+            var fsfeCompliance = $('#fsfe-choice > .btn.active').val()
+            // var fsfeCompliance    = $( "#fsfe-compliance" ).val();
 
             if ( !$('#beneficiary-name').val() ) {
                 $('#beneficiary-name').addClass("cla-alert");
@@ -1030,9 +1041,12 @@ function testGeneralPage ()
                 $('#project-jurisdiction').removeClass("cla-alert");
             }
 
-            if ( !$('#fsfe-compliance').val() || $('#fsfe-compliance').val() == "no-fsfe-compliance" ) {
-                fsfeCompliance = "";
-
+            if ( !$('#fsfe-compliance').val() || $('#fsfe-compliance').val() == "non-fsfe-compliance" ) {
+                fsfeCompliance = "non-fsfe-compliance";
+                if ( doDebug ) {
+                      console.log("non-fsfe-compliance: " +
+                              "NON-FSFE Compliance Enabled");
+                            }
             } else {
                 if (fsfeCompliance == "fsfe-compliance") {
                   if ( doDebug ) {
@@ -1616,11 +1630,18 @@ function updateTestUrls ()
 $(document).ready(function() {
 
     loadTemplates();
-
+    
     queryStringToConfigs();
       if ( doDebug )
         setFakeData();
+    
+    //if ($('#fsfe-choice > .btn.active').val() == 'non-fsfe-compliance')
+    //    configs['fsfe-compliance'] = 'non-fsfe-compliance'
+    //else configs['fsfe-compliance'] = 'fsfe-compliance'
     updateConfigs();
+    //if (configs['fsfe-compliance'] == 'non-fsfe-compliance')
+        //$('#non-fsfe-compliance').addClass('active')
+        //$('#fsfe-compliance').removeClass('active')
 
     if ( '1337' == debugNeedle )
         updateTestUrls();
@@ -1683,8 +1704,12 @@ $(document).ready(function() {
     });
 
 
-    $("#fsfe-compliance").button("toggle");
-    selectFsfeCompliance();
+    if (configs['fsfe-compliance'] == 'fsfe-compliance' || configs['fsfe-compliance'] == '') {
+        $("#fsfe-compliance").button("toggle");
+        selectFsfeCompliance(); }
+    else if (configs['fsfe-compliance'] == 'non-fsfe-compliance') 
+        { $("#non-fsfe-compliance").button("toggle");
+        selectNonFsfeCompliance(); }
 
     $( "#fsfe-compliance").click(function() {
         selectFsfeCompliance();
