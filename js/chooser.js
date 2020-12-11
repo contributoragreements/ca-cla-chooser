@@ -214,7 +214,7 @@ function queryStringToConfigs ()
  */
 function updateConfigs ()
 {
-
+    /* @TODO move fsfe agreement ui update here */
     /* Type of Agreement */
 
     if ( configs["fsfe-fla"] )
