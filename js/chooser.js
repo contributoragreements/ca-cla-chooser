@@ -216,7 +216,7 @@ function updateConfigs ()
 {
     /* @TODO move fsfe agreement ui update here */
     /* Type of Agreement */
-
+    // typeof-agreement - why is this not used anywhere else?
     if ( configs["fsfe-fla"] )
         $('#typeof-agreement').val( configs["typeof-agreement"]);
     if ( doDebug )
