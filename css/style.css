@@ -110,6 +110,15 @@ input.cla-alert {
     margin-right: 4px;
 }
 
+h1#tmp-title,
+h1#tmp-subtitle,
+h1#tmp-subtitle-patent
+{
+        text-align: center;
+}
+h1#tmp-subtitle-patent {
+        margin-bottom: 1em;
+}
 
 h2#tmp-title,
 h2#tmp-subtitle,
