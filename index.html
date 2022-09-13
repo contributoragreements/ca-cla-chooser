@@ -442,6 +442,15 @@ class="input-block-level" placeholder="Location of your licensing policy">
                           </li>
                         </ul>
 
+                        <ul class="thumbnails">
+                          <li class="span12">
+                          <div class="thumbnail">
+                              <div class="caption" id="review-text-fla-entity">
+                              </div>
+                          </div>
+                          </li>
+                        </ul>
+
 					    </div>
 						<div class="tab-pane" id="apply">
 
@@ -521,7 +530,7 @@ class="input-block-level" placeholder="Location of your licensing policy">
                         </ul>
 
 
-                        <!-- Modal INDIVIDUAL START-->
+                        <!-- HTML Modal INDIVIDUAL START-->
                         <div id="myHTML" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -537,10 +546,28 @@ class="input-block-level" placeholder="Location of your licensing policy">
                             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                           </div>
                         </div>
-                        <!-- Modal INDIVIDUAL END -->
+                        <!-- HTML Modal INDIVIDUAL END -->
+
+                        <!-- MKDN Modal INDIVIDUAL START-->
+                        <div id="myMKDN" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 id="myModalLabel" class="myModalLabel">Individual Contributor License Agreement</h3>
+
+                          </div>
+                          <div class="modal-body">
+                            <span>Click the box below. Then, copy and paste the agreement where you would like.</span><br /><br />
+                        <textarea id="embed-agreement-mkdn" class="input-block-level" onclick="this.select();" rows="14" readonly>
+                        </textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                          </div>
+                        </div>
+                        <!-- MKDN Modal INDIVIDUAL END -->
 
 
-                        <!-- Modal ENTITY START -->
+                        <!--HTML Modal ENTITY START -->
                         <div id="myHTML-entity" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -556,9 +583,27 @@ class="input-block-level" placeholder="Location of your licensing policy">
                             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                           </div>
                         </div>
-                        <!-- Modal ENTITY END -->
+                        <!--HTML Modal ENTITY END -->
 
-                        <!-- Modal FLA START -->
+                        <!--MKDN Modal ENTITY START -->
+                        <div id="myMKDN-entity" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 id="myModalLabel" class="myModalLabel">Entity Contributor License Agreement</h3>
+
+                          </div>
+                          <div class="modal-body">
+                            <span>Click the box below. Then, copy and paste the agreement where you would like.</span><br /><br />
+                        <textarea id="embed-agreement-entity-mkdn" class="input-block-level" onclick="this.select();" rows="14" readonly>
+                        </textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                          </div>
+                        </div>
+                        <!--MKDN Modal ENTITY END -->
+
+                        <!--HTML Modal FLA START -->
                         <div id="myHTML-fla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -574,8 +619,61 @@ class="input-block-level" placeholder="Location of your licensing policy">
                             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                           </div>
                         </div>
-                        <!-- Modal FLA END -->
+                        <!--HTML Modal FLA END -->
 
+                        <!--MKDN Modal FLA START -->
+                        <div id="myMKDN-fla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 id="myModalLabel" class="myModalLabel">Fiduciary Contributor License Agreement</h3>
+
+                          </div>
+                          <div class="modal-body">
+                            <span>Click the box below. Then, copy and paste the agreement where you would like.</span><br /><br />
+                        <textarea id="embed-agreement-fla-mkdn" class="input-block-level" onclick="this.select();" rows="14" readonly>
+                        </textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                          </div>
+                        </div>
+                        <!--MKDN Modal FLA END -->
+
+                         <!--HTML Modal FLA ENTITY START -->
+                        <div id="myHTML-fla-entity" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 id="myModalLabel" class="myModalLabel">Fiduciary Contributor License Agreement</h3>
+
+                          </div>
+                          <div class="modal-body">
+                            <span>Click the box below. Then, copy and paste the agreement where you would like.</span><br /><br />
+                        <textarea id="embed-agreement-fla-entity" class="input-block-level" onclick="this.select();" rows="14" readonly>
+                        </textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                          </div>
+                        </div>
+                        <!--HTML Modal FLA ENTITY END -->
+
+                        <!--MKDN Modal FLA ENTITY START -->
+                        <div id="myMKDN-fla-entity" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 id="myModalLabel" class="myModalLabel">Fiduciary Contributor License Agreement</h3>
+
+                          </div>
+                          <div class="modal-body">
+                            <span>Click the box below. Then, copy and paste the agreement where you would like.</span><br /><br />
+                        <textarea id="embed-agreement-fla-entity-mkdn" class="input-block-level" onclick="this.select();" rows="14" readonly>
+                        </textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                          </div>
+                        </div>
+                        <!--MKDN Modal FLA ENTITY END -->
 
 
                         <div id="review-text-style" style="display: none"></div>
@@ -602,6 +700,7 @@ class="input-block-level" placeholder="Location of your licensing policy">
     <div id="embed-offscreen" style="display: none;">&nbsp;</div>
     <div id="embed-offscreen-entity" style="display: none;">&nbsp;</div>
     <div id="embed-offscreen-fla" style="display: none;">&nbsp;</div>
+    <div id="embed-offscreen-fla-entity" style="display: none;">&nbsp;</div>
 
 
     <script src="js/jquery-1.11.1.min.js"></script>
@@ -622,6 +721,6 @@ class="input-block-level" placeholder="Location of your licensing policy">
     <script src="js/pdfmake.min.js"></script>
     <script src="js/vfs_fonts.js"></script>
     <script src="js/html-to-pdfmake/browser.js"></script>
-
+    <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
   </body>
 </html>
