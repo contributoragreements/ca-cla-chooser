@@ -443,6 +443,15 @@ class="input-block-level" placeholder="Location of your licensing policy">
                           </li>
                         </ul>
 
+                        <ul class="thumbnails">
+                          <li class="span12">
+                          <div class="thumbnail">
+                              <div class="caption" id="review-text-fla-entity">
+                              </div>
+                          </div>
+                          </li>
+                        </ul>
+
 					    </div>
 						<div class="tab-pane" id="apply">
 
@@ -473,19 +482,25 @@ class="input-block-level" placeholder="Location of your licensing policy">
                         <tr id="apply-individual">
                         <td>Individual Contributor License Agreement</td>
                         <td>Contributor Agreements 1.1</td>
-                        <td><a href="#" role="button" class="btn btn-primary btn-html final-link" data-toggle="modal" data-inline="true">LINK</a> <a href="#myHTML" role="button" class="btn btn-primary btn-html" data-toggle="modal" data-inline="true">HTML</a> <form method="POST" action="http://fab2pdf.herokuapp.com/" id="html2pdf-form-individual"><input type="hidden" name="title" value="Individual Contributor License Agreement 1.1" /><input type="hidden" name="type" value="individual" /><input type="hidden" class="htmlstore-individual" id="htmlstore-individual" name="htmlstore-individual" /><a role="button" class="btn btn-primary" id="html2pdf-individual" data-inline="true">PDF</a></form></td>
+                        <td><a href="#" role="button" class="btn btn-primary btn-html final-link" data-toggle="modal" data-inline="true">LINK</a> <a href="#myHTML" role="button" class="btn btn-primary btn-html" data-toggle="modal" data-inline="true">HTML</a> <a href="#myMKDN" role="button" class="btn btn-primary btn-html" data-toggle="modal" data-inline="true">MKDN</a> <form method="POST" action="http://fab2pdf.herokuapp.com/" id="html2pdf-form-individual"><input type="hidden" name="title" value="Individual Contributor License Agreement 1.1" /><input type="hidden" name="type" value="individual" /><input type="hidden" class="htmlstore-individual" id="htmlstore-individual" name="htmlstore-individual" /><a role="button" class="btn btn-primary" id="html2pdf-individual" data-inline="true">PDF</a></form></td>
                       	</tr>
 
                         <tr id="apply-entity">
                         <td>Entity Contributor License Agreement</td>
                         <td>Contributor Agreements 1.1</td>
-                        <td><a href="#" role="button" class="btn btn-primary btn-html final-link" data-toggle="modal" data-inline="true">LINK</a> <a href="#myHTML-entity" role="button" class="btn btn-primary btn-html" data-toggle="modal" data-inline="true">HTML</a> <form method="POST" action="http://fab2pdf.herokuapp.com/" id="html2pdf-form-entity"><input type="hidden" name="title" value="Entity Contributor License Agreement 1.1" /><input type="hidden" name="type" value="entity" /><input type="hidden" class="htmlstore-entity" id="htmlstore-entity" name="htmlstore-entity" /><a role="button" class="btn btn-primary" id="html2pdf-entity" data-inline="true">PDF</a></form></td>
+                        <td><a href="#" role="button" class="btn btn-primary btn-html final-link" data-toggle="modal" data-inline="true">LINK</a> <a href="#myHTML-entity" role="button" class="btn btn-primary btn-html" data-toggle="modal" data-inline="true">HTML</a><a href="#myMKDN-entity" role="button" class="btn btn-primary btn-html" data-toggle="modal" data-inline="true">MKDN</a> <form method="POST" action="http://fab2pdf.herokuapp.com/" id="html2pdf-form-entity"><input type="hidden" name="title" value="Entity Contributor License Agreement 1.1" /><input type="hidden" name="type" value="entity" /><input type="hidden" class="htmlstore-entity" id="htmlstore-entity" name="htmlstore-entity" /><a role="button" class="btn btn-primary" id="html2pdf-entity" data-inline="true">PDF</a></form></td>
                         </tr>
 
                         <tr id="apply-fla">
                         <td>Fiduciary Contributor License Agreement</td>
                         <td>Fiduciary License Agreement 2.0</td>
-                        <td><a href="#" role="button" class="btn btn-primary btn-html final-link" data-toggle="modal" data-inline="true">LINK</a> <a href="#myHTML-fla" role="button" class="btn btn-primary btn-html" data-toggle="modal" data-inline="true">HTML</a> <form method="POST" action="http://fab2pdf.herokuapp.com/" id="html2pdf-form-fla"><input type="hidden" name="title" value="Fiduciary License License Agreement 2.0" /><input type="hidden" name="type" value="fla" /><input type="hidden" class="htmlstore-fla" id="htmlstore-fla" name="htmlstore-fla" /><a role="button" class="btn btn-primary" id="html2pdf-fla" data-inline="true">PDF</a></form></td>
+                        <td><a href="#" role="button" class="btn btn-primary btn-html final-link" data-toggle="modal" data-inline="true">LINK</a> <a href="#myHTML-fla" role="button" class="btn btn-primary btn-html" data-toggle="modal" data-inline="true">HTML</a> <a href="#myMKDN-fla" role="button" class="btn btn-primary btn-html" data-toggle="modal" data-inline="true">MKDN</a><form method="POST" action="http://fab2pdf.herokuapp.com/" id="html2pdf-form-fla"><input type="hidden" name="title" value="Fiduciary License License Agreement 2.0" /><input type="hidden" name="type" value="fla" /><input type="hidden" class="htmlstore-fla" id="htmlstore-fla" name="htmlstore-fla" /><a role="button" class="btn btn-primary" id="html2pdf-fla" data-inline="true">PDF</a></form></td>
+                        <!-- make sure that all values from here are actually used -->
+                        </tr>
+                        <tr id="apply-fla-entity">
+                        <td>Entity Fiduciary Contributor License Agreement</td>
+                        <td>Fiduciary License Agreement 2.0</td>
+                        <td><a href="#" role="button" class="btn btn-primary btn-html final-link" data-toggle="modal" data-inline="true">LINK</a> <a href="#myHTML-fla-entity" role="button" class="btn btn-primary btn-html" data-toggle="modal" data-inline="true">HTML</a> <a href="#myMKDN-fla-entity" role="button" class="btn btn-primary btn-html" data-toggle="modal" data-inline="true">MKDN</a><form method="POST" action="http://fab2pdf.herokuapp.com/" id="html2pdf-form-fla-entity"><input type="hidden" name="title" value="Fiduciary License License Agreement 2.0" /><input type="hidden" name="type" value="fla-entity" /><input type="hidden" class="htmlstore-fla-entity" id="htmlstore-fla-entity" name="htmlstore-fla-entity" /><a role="button" class="btn btn-primary" id="html2pdf-fla-entity" data-inline="true">PDF</a></form></td>
                         <!-- make sure that all values from here are actually used -->
                         </tr>
                         </table>
@@ -522,7 +537,7 @@ class="input-block-level" placeholder="Location of your licensing policy">
                         </ul>
 
 
-                        <!-- Modal INDIVIDUAL START-->
+                        <!-- HTML Modal INDIVIDUAL START-->
                         <div id="myHTML" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -538,10 +553,28 @@ class="input-block-level" placeholder="Location of your licensing policy">
                             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                           </div>
                         </div>
-                        <!-- Modal INDIVIDUAL END -->
+                        <!-- HTML Modal INDIVIDUAL END -->
+
+                        <!-- MKDN Modal INDIVIDUAL START-->
+                        <div id="myMKDN" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 id="myModalLabel" class="myModalLabel">Individual Contributor License Agreement</h3>
+
+                          </div>
+                          <div class="modal-body">
+                            <span>Click the box below. Then, copy and paste the agreement where you would like.</span><br /><br />
+                        <textarea id="embed-agreement-mkdn" class="input-block-level" onclick="this.select();" rows="14" readonly>
+                        </textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                          </div>
+                        </div>
+                        <!-- MKDN Modal INDIVIDUAL END -->
 
 
-                        <!-- Modal ENTITY START -->
+                        <!--HTML Modal ENTITY START -->
                         <div id="myHTML-entity" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -557,9 +590,27 @@ class="input-block-level" placeholder="Location of your licensing policy">
                             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                           </div>
                         </div>
-                        <!-- Modal ENTITY END -->
+                        <!--HTML Modal ENTITY END -->
 
-                        <!-- Modal FLA START -->
+                        <!--MKDN Modal ENTITY START -->
+                        <div id="myMKDN-entity" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 id="myModalLabel" class="myModalLabel">Entity Contributor License Agreement</h3>
+
+                          </div>
+                          <div class="modal-body">
+                            <span>Click the box below. Then, copy and paste the agreement where you would like.</span><br /><br />
+                        <textarea id="embed-agreement-entity-mkdn" class="input-block-level" onclick="this.select();" rows="14" readonly>
+                        </textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                          </div>
+                        </div>
+                        <!--MKDN Modal ENTITY END -->
+
+                        <!--HTML Modal FLA START -->
                         <div id="myHTML-fla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -575,8 +626,61 @@ class="input-block-level" placeholder="Location of your licensing policy">
                             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                           </div>
                         </div>
-                        <!-- Modal FLA END -->
+                        <!--HTML Modal FLA END -->
 
+                        <!--MKDN Modal FLA START -->
+                        <div id="myMKDN-fla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 id="myModalLabel" class="myModalLabel">Fiduciary Contributor License Agreement</h3>
+
+                          </div>
+                          <div class="modal-body">
+                            <span>Click the box below. Then, copy and paste the agreement where you would like.</span><br /><br />
+                        <textarea id="embed-agreement-fla-mkdn" class="input-block-level" onclick="this.select();" rows="14" readonly>
+                        </textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                          </div>
+                        </div>
+                        <!--MKDN Modal FLA END -->
+
+                         <!--HTML Modal FLA ENTITY START -->
+                        <div id="myHTML-fla-entity" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 id="myModalLabel" class="myModalLabel">Fiduciary Contributor License Agreement</h3>
+
+                          </div>
+                          <div class="modal-body">
+                            <span>Click the box below. Then, copy and paste the agreement where you would like.</span><br /><br />
+                        <textarea id="embed-agreement-fla-entity" class="input-block-level" onclick="this.select();" rows="14" readonly>
+                        </textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                          </div>
+                        </div>
+                        <!--HTML Modal FLA ENTITY END -->
+
+                        <!--MKDN Modal FLA ENTITY START -->
+                        <div id="myMKDN-fla-entity" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 id="myModalLabel" class="myModalLabel">Fiduciary Contributor License Agreement</h3>
+
+                          </div>
+                          <div class="modal-body">
+                            <span>Click the box below. Then, copy and paste the agreement where you would like.</span><br /><br />
+                        <textarea id="embed-agreement-fla-entity-mkdn" class="input-block-level" onclick="this.select();" rows="14" readonly>
+                        </textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                          </div>
+                        </div>
+                        <!--MKDN Modal FLA ENTITY END -->
 
 
                         <div id="review-text-style" style="display: none"></div>
@@ -603,6 +707,7 @@ class="input-block-level" placeholder="Location of your licensing policy">
     <div id="embed-offscreen" style="display: none;">&nbsp;</div>
     <div id="embed-offscreen-entity" style="display: none;">&nbsp;</div>
     <div id="embed-offscreen-fla" style="display: none;">&nbsp;</div>
+    <div id="embed-offscreen-fla-entity" style="display: none;">&nbsp;</div>
 
 
     <script src="js/jquery-1.11.1.min.js"></script>
@@ -620,5 +725,6 @@ class="input-block-level" placeholder="Location of your licensing policy">
 	<script src="js/prettify.js"></script>
     <script src="js/tooltip.js"></script>
     <script src="js/chooser.js"></script>
+    <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
   </body>
 </html>
