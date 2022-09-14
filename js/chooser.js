@@ -1816,7 +1816,6 @@ $(document).ready(function() {
         return testCopyrightPage();
     });
 
-
     if (configs['fsfe-compliance'] == 'fsfe-compliance' || configs['fsfe-compliance'] == '') {
         $("#fsfe-compliance").button("toggle");
         selectFsfeCompliance(); }
