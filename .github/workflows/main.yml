@@ -1,0 +1,25 @@
+name: deploy via ssh
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-20.04
+    steps:
+    - name: remote ssh commands
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        port: ${{ secrets.PORT }}
+        password: ${{ secrets.PASSWORD }}
+        username: ${{ secrets.USER }}
+        #key: ${{ secrets.KEY }}
+        use_insecure_cipher: true
+        cipher: diffie-hellman-group-exchange-sha256
+        debug: true
+        script: |
+          cd ~/contributoragreements.org/ca-cla-chooser
+          git pull
+
