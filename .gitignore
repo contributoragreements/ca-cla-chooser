@@ -1,3 +1,7 @@
 js/config.json
 .DS_Store
 version.log
+node_modules/
+/test-results/
+/playwright-report/
+/playwright/.cache/
