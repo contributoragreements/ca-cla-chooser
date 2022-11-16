@@ -1732,8 +1732,9 @@ function makePDF( htmlContent ) {
         }
     };
     
-    var agreementPM = htmlToPdfmake(htmlContent);
-    var dd = { content:agreementPM } // document definition, styling etc can be added here
+    var agreementStyle = $("#review-text-style").html()
+    var agreementPM = htmlToPdfmake(htmlContent + agreementStyle );
+    var dd = { content:agreementPM }
     pdfMake.createPdf(dd).download(); // put in new window
 }
 
