@@ -237,9 +237,7 @@ function queryStringToConfigs ()
 }
 
 /**
- * @todo can combine this with review code and save code, but will need
- * to abstract the following more than likely into functions.
- * Then, that will allow creating a querystring easier
+ * This gets config values, and sets the page content accordingly
  */
 function updateConfigs ()
 {
@@ -279,7 +277,9 @@ function updateConfigs ()
     /* fsfe compliance changes */
     if ( configs["fsfe-compliance"] == 'fsfe-compliance' || configs["fsfe-compliance"] == '' )
       $('#fsfe-compliance').val(configs["fsfe-compliance"] );
-    // FIXME (check) this might have unintended side effects
+	$('#fsfe-compliance').addClass('active');
+	$('#non-fsfe-compliance').removeClass('active')
+      $('#fsfe-compliance').removeClass('active')
         if ( doDebug )
             console.log("fsfe-compliance: " +
                 configs["fsfe-compliance"]);
