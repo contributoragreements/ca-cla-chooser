@@ -13,7 +13,7 @@
  */
 // $('#rootwizard').bootstrapWizard('show', 2); // (to skip a tab)
 
-var doDebug             = true;
+var doDebug             = false;
 var debugNeedle         = 1337;
 
 var services;
@@ -1787,6 +1787,7 @@ $(document).ready(function() {
 
     function selectFsfeCompliance ()
     {
+	//configs['fsfe-compliance'] = 'fsfe-compliance';
         $("#agreement-exclusivity-fsfe").show();
         $("#agreement-exclusivity-non-fsfe").hide();
         $('select[name*="agreement-exclusivity"] option[value="exclusive"]').prop('selected', true);
@@ -1818,6 +1819,7 @@ $(document).ready(function() {
 
     function selectNonFsfeCompliance ()
     {
+	//configs['fsfe-compliance'] = 'non-fsfe-compliance';
         $("#agreement-exclusivity-non-fsfe").show();
         $("#agreement-exclusivity-fsfe").hide();
         if ( !$('#non-exclusive').length ) {
