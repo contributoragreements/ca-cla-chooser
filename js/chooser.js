@@ -13,7 +13,7 @@
  */
 // $('#rootwizard').bootstrapWizard('show', 2); // (to skip a tab)
 
-var doDebug             = false;
+var doDebug             = true;
 var debugNeedle         = 1337;
 
 var services;
@@ -287,6 +287,9 @@ function updateConfigs ()
       $('#fsfe-compliance').val(configs["non-fsfe-compliance"] );
       $('#non-fsfe-compliance').addClass('active')
       $('#fsfe-compliance').removeClass('active')
+	// FIXME maybe this should use sth like this instead of add/removeClass?
+	// $("#outbound-option-same-licenses").prop('checked', true );
+        //    $("#outbound-option-same-licenses" ).change();
     if ( doDebug )
         console.log("non-fsfe-compliance: " +
             configs["fsfe-compliance"]);
@@ -1331,7 +1334,7 @@ function testReviewPage ()
                 $("#tmp-fsfe-compliance").show();
                 $("#tmp-fsfe-compliance").html(
                     fsfePreamble );
-                configs['fsfe-compliance'] = "fsfe-compliance";
+                fe-compliance'] = "fsfe-compliance";
             } */
 
 
