@@ -245,9 +245,7 @@ function updateConfigs ()
 {
     /* @TODO move fsfe agreement ui update here */
     /* Type of Agreement */
-    // typeof-agreement - why is this not used anywhere else?
-    if ( configs["fsfe-fla"] )
-        $('#typeof-agreement').val( configs["typeof-agreement"]);
+    
     if ( doDebug )
         console.log("typeof-agreement: " + configs["typeof-agreement"]);
     /* general */
@@ -279,11 +277,11 @@ function updateConfigs ()
             configs["project-jurisdiction"]);
 
     /* fsfe compliance changes */
-    if ( configs["fsfe-compliance"] == 'fsfe-compliance' )
+    if ( configs["fsfe-compliance"] == 'fsfe-compliance' || configs["fsfe-compliance"] == '' )
       $('#fsfe-compliance').val(configs["fsfe-compliance"] );
-    // this might have unintended side effects
+    // FIXME (check) this might have unintended side effects
         if ( doDebug )
-            console.log("non-fsfe-compliance: " +
+            console.log("fsfe-compliance: " +
                 configs["fsfe-compliance"]);
     else
       $('#fsfe-compliance').val(configs["non-fsfe-compliance"] );
@@ -1772,8 +1770,10 @@ $(document).ready(function() {
 
     if (configs['fsfe-compliance'] == 'fsfe-compliance' || configs['fsfe-compliance'] == '') {
         $("#fsfe-compliance").button("toggle");
+	configs['fsfe-compliance'] = 'fsfe-compliance'
         selectFsfeCompliance(); }
-    else if (configs['fsfe-compliance'] == 'non-fsfe-compliance') 
+    else if (configs['fsfe-compliance'] == 'non-fsfe-compliance')
+	configs['fsfe-compliance'] = 'non-fsfe-compliance'
         { $("#non-fsfe-compliance").button("toggle");
         selectNonFsfeCompliance(); }
 
