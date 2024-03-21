@@ -1716,7 +1716,7 @@ $(document).ready(function() {
     $("#patent-option-2-options").hide();
 
 
-    $("#html2pdf-individual").click(function() {
+    /*$("#html2pdf-individual").click(function() {
         $('#html2pdf-form-individual').submit();
     });
 
@@ -1729,7 +1729,7 @@ $(document).ready(function() {
 
     $("#html2pdf-fla-entity").click(function() {
         $('#html2pdf-form-fla-entity').submit();
-    });
+    }); */
 
     // @TODO need to make these each test each input, not ALL inputs
     $( "#beneficiary-name" ).change(function() {
@@ -1773,10 +1773,10 @@ $(document).ready(function() {
 
     if (configs['fsfe-compliance'] == 'fsfe-compliance' || configs['fsfe-compliance'] == '') {
         $("#fsfe-compliance").button("toggle");
-	configs['fsfe-compliance'] = 'fsfe-compliance'
+	configs['fsfe-compliance'] = 'fsfe-compliance';
         selectFsfeCompliance(); }
     else if (configs['fsfe-compliance'] == 'non-fsfe-compliance')
-	configs['fsfe-compliance'] = 'non-fsfe-compliance'
+	configs['fsfe-compliance'] = 'non-fsfe-compliance';
         { $("#non-fsfe-compliance").button("toggle");
         selectNonFsfeCompliance(); }
 
