@@ -30,7 +30,7 @@ $.ajax({
     }
 });
 if ( doDebug )
-    console.log(gitversion)
+    console.log(gitversion);
 
 // added version to check what is running. now displays short git commit hash as version
 var version = "1.0"
@@ -1698,7 +1698,7 @@ function updateTestUrls ()
 $(document).ready(function() {
 
     loadTemplates();
-    console.log("loaded templates")
+    console.log("loaded templates");
     queryStringToConfigs();
       if ( doDebug )
         setFakeData();
@@ -1791,7 +1791,7 @@ $(document).ready(function() {
     });
     $("#non-fsfe-compliance").click(function() {
         selectNonFsfeCompliance();
-	console.log("selected non-fsfe compliance at document load")
+	console.log("selected non-fsfe compliance at document load");
     });
 
     function selectFsfeCompliance ()
