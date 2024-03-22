@@ -1337,7 +1337,7 @@ function testReviewPage ()
                 $("#tmp-fsfe-compliance").show();
                 $("#tmp-fsfe-compliance").html(
                     fsfePreamble );
-                fe-compliance'] = "fsfe-compliance";
+                configs['fsfe-compliance'] = "fsfe-compliance";
             } */
 
 
