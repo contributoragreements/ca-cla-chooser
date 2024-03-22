@@ -1918,7 +1918,7 @@ $(document).ready(function() {
 
     });
 
-    $( "#link-esign" ).() {
+    $( "#link-esign" ).click(function() {
         if ( "" == configs["project-email"] )
         {
             $("#link-esign").removeAttr("href");
