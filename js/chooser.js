@@ -230,6 +230,8 @@ function queryStringToConfigs ()
 {
     $.each( $.QueryString, function(p,v) {
         configs[p] = v;
+	if ( true )
+            console.log("configs[p]=v: " + configs[p] + ": " + p + ": " + v);
         if ( doDebug )
             console.log("configs[p]=v: " + configs[p] + ": " + p + ": " + v);
     });
@@ -275,6 +277,7 @@ function updateConfigs ()
             configs["project-jurisdiction"]);
 
     /* fsfe compliance changes */
+    // FIXME this is also double with after document.load?
     if ( configs["fsfe-compliance"] == 'fsfe-compliance' || configs["fsfe-compliance"] == '' )
       $('#fsfe-compliance').val(configs["fsfe-compliance"] );
 	$('#fsfe-compliance').addClass('active');
@@ -291,7 +294,7 @@ function updateConfigs ()
 	// $("#outbound-option-same-licenses").prop('checked', true );
         //    $("#outbound-option-same-licenses" ).change();
     if ( doDebug )
-        console.log("non-fsfe-compliance: " +
+        console.log("fsfe-compliance: " +
             configs["fsfe-compliance"]);
 
     /* copyright */
@@ -766,7 +769,7 @@ function setOutboundOptionSameLicenses ()
     } else {
         fixPatentParagraph();
     }
-
+    // FIXME apparently sometimes hasClass active is used instead of a config value. well, we do need the config value to recreate from link
     if ( $("#fsfe-compliance").hasClass('active') )
     {
         $('#review-text-fla #tmp-outbound-option-1-fsfe').show();
@@ -1673,6 +1676,7 @@ function testApplyPage ()
 
 function testAllPages()
 {
+    console.log("testing all pages...");
     testGeneralPage();
     testCopyrightPage();
     testPatentPage();
@@ -1694,11 +1698,11 @@ function updateTestUrls ()
 $(document).ready(function() {
 
     loadTemplates();
-    
+    console.log("loaded templates")
     queryStringToConfigs();
       if ( doDebug )
         setFakeData();
-    
+    // TODO this should be moved to a separate function? (or removed)
     //if ($('#fsfe-choice > .btn.active').val() == 'non-fsfe-compliance')
     //    configs['fsfe-compliance'] = 'non-fsfe-compliance'
     //else configs['fsfe-compliance'] = 'fsfe-compliance'
@@ -1773,16 +1777,21 @@ $(document).ready(function() {
 
     if (configs['fsfe-compliance'] == 'fsfe-compliance' || configs['fsfe-compliance'] == '') {
         $("#fsfe-compliance").button("toggle");
-	configs['fsfe-compliance'] = 'fsfe-compliance';
         selectFsfeCompliance(); }
     else if (configs['fsfe-compliance'] == 'non-fsfe-compliance')
 	configs['fsfe-compliance'] = 'non-fsfe-compliance';
         { $("#non-fsfe-compliance").button("toggle");
         selectNonFsfeCompliance(); }
 
+    // is this a default or fallback?
 
-    $( "#fsfe-compliance").click(function() {
+    $("#fsfe-compliance").click(function() {
         selectFsfeCompliance();
+	console.log("selected fsfe compliance");
+    });
+    $("#non-fsfe-compliance").click(function() {
+        selectNonFsfeCompliance();
+	console.log("selected non-fsfe compliance")
     });
 
     function selectFsfeCompliance ()
