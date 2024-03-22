@@ -1720,18 +1720,18 @@ $(document).ready(function() {
     $("#patent-option-2-options").hide();
 
 
-    /*$("#html2pdf-individual").click(function() {
+    /*$("#html2pdf-individual").() {
         $('#html2pdf-form-individual').submit();
     });
 
-    $("#html2pdf-entity").click(function() {
+    $("#html2pdf-entity").() {
         $('#html2pdf-form-entity').submit();
     });
-    $("#html2pdf-fla").click(function() {
+    $("#html2pdf-fla").() {
         $('#html2pdf-form-fla').submit();
     });
 
-    $("#html2pdf-fla-entity").click(function() {
+    $("#html2pdf-fla-entity").() {
         $('#html2pdf-form-fla-entity').submit();
     }); */
 
@@ -1787,16 +1787,16 @@ $(document).ready(function() {
 
     $("#fsfe-compliance").click(function() {
         selectFsfeCompliance();
-	console.log("selected fsfe compliance");
+	console.log("selected fsfe compliance at document load");
     });
     $("#non-fsfe-compliance").click(function() {
         selectNonFsfeCompliance();
-	console.log("selected non-fsfe compliance")
+	console.log("selected non-fsfe compliance at document load")
     });
 
     function selectFsfeCompliance ()
     {
-	//configs['fsfe-compliance'] = 'fsfe-compliance';
+	configs['fsfe-compliance'] = 'fsfe-compliance';
         $("#agreement-exclusivity-fsfe").show();
         $("#agreement-exclusivity-non-fsfe").hide();
         $('select[name*="agreement-exclusivity"] option[value="exclusive"]').prop('selected', true);
@@ -1822,13 +1822,9 @@ $(document).ready(function() {
         $("#apply-fla-entity").show();
     }
 
-    $( "#non-fsfe-compliance").click(function () {
-        selectNonFsfeCompliance();
-    });
-
     function selectNonFsfeCompliance ()
     {
-	//configs['fsfe-compliance'] = 'non-fsfe-compliance';
+	configs['fsfe-compliance'] = 'non-fsfe-compliance';
         $("#agreement-exclusivity-non-fsfe").show();
         $("#agreement-exclusivity-fsfe").hide();
         if ( !$('#non-exclusive').length ) {
@@ -1922,7 +1918,7 @@ $(document).ready(function() {
 
     });
 
-    $( "#link-esign" ).click(function() {
+    $( "#link-esign" ).() {
         if ( "" == configs["project-email"] )
         {
             $("#link-esign").removeAttr("href");
