@@ -2,3 +2,4 @@ js/config.json
 .DS_Store
 version.log
 rust_mozprofile*
+node_modules
