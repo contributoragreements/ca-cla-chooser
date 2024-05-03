@@ -1,4 +1,4 @@
-.navbar-static-top .container,
+/*.navbar-static-top .container,
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container {
   width: 1200px;
@@ -13,7 +13,7 @@
 
 .span12 {
   width: 1200px;
-}
+}*/
 
 #general .btn-group {
   width: 100%;
@@ -100,10 +100,6 @@ select.cla-alert,
 input.cla-alert {
     border: 1px solid red;
 }
-
-/* #apply-format {
-    width: 200px;
-} */
 
 .btn-html {
     float: left;
