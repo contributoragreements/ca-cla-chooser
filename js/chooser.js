@@ -1001,8 +1001,9 @@ function setOutboundOptionNoCommitment ()
     $('#review-text #tmp-digit-waiver-2').html( '5.' );
     $('#review-text #tmp-digit-term').html( '7.' );
     $('#review-text #tmp-digit-term-1').html( '7.1' );
-    $('#review-text #tmp-digit-term-2').html( '7.2' );
-    $('#review-text #tmp-digit-term-3').html( '7.3' );
+    // 7.2 is removed
+    //$('#review-text #tmp-digit-term-2').html( '7.2' );
+    $('#review-text #tmp-digit-term-3').html( '7.2' );
     $('#review-text #tmp-digit-term-special').html( '4, 5, 6, 7 and 8' );
     $('#review-text #tmp-digit-misc').html( '8' );
     $('#review-text #tmp-digit-misc-1').html( '8.1' );
@@ -1018,8 +1019,9 @@ function setOutboundOptionNoCommitment ()
     $('#review-text-entity #tmp-digit-waiver-2').html( '5.' );
     $('#review-text-entity #tmp-digit-term').html( '7.' );
     $('#review-text-entity #tmp-digit-term-1').html( '7.1' );
-    $('#review-text-entity #tmp-digit-term-2').html( '7.2' );
-    $('#review-text-entity #tmp-digit-term-3').html( '7.3' );
+    // section 7.2 is removed
+    //$('#review-text-entity #tmp-digit-term-2').html( '7.2' );
+    $('#review-text-entity #tmp-digit-term-3').html( '7.2' );
     $('#review-text-entity #tmp-digit-term-special').html( '4, 5, 6, 7 and 8' );
     $('#review-text-entity #tmp-digit-misc').html( '8' );
     $('#review-text-entity #tmp-digit-misc-1').html( '8.1' );
@@ -1027,6 +1029,9 @@ function setOutboundOptionNoCommitment ()
     $('#review-text-entity #tmp-digit-misc-3').html( '8.3' );
     $('#review-text-entity #tmp-digit-misc-4').html( '8.4' );
     $('#review-text-entity #tmp-digit-misc-5').html( '8.5' );
+    // set reference to termination clause properly after removing section 4
+    $('#review-text #tmp-contributor-termination-reference').html('7.2');
+    $('#review-text-entity #tmp-contributor-termination-reference').html('7.2');
     // hide special term-special section
     $('#review-text #tmp-term-special').hide();
     $('#review-text #tmp-term-special').addClass("nuke");
