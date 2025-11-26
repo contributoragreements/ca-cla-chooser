@@ -1,425 +1,400 @@
 const Page = require('./pageobjects/page');
+const GeneralPage = require('./pageobjects/general.page');
+const CopyrightPage = require('./pageobjects/copyright.page');
+const PatentsPage = require('./pageobjects/patents.page');
+const ApplyPage = require('./pageobjects/apply.page');
 const { expect } = require('chai');
+
 const page = new Page();
+const applyPage = new ApplyPage();
 
-describe('Wizard Component Tests', async function() {
+describe('Wizard Output Validation Tests', async function() {
 
-    beforeEach(async function () {
-        await page.open();
-    });
+    describe('FLA (Fiduciary License Agreement) vs CLA (Contributor License Agreement)', async function() {
 
-    describe('Wizard Initialization', async function() {
+        it('should generate FLA text when FSFE compliance is selected', async function() {
+            await page.open();
+            await GeneralPage.selectFsfeCompliance();
+            await page.goThroughAll();
+            await browser.pause(500);
 
-        it('should initialize the wizard with all navigation bullets visible', async function() {
-            await expect(page.generalBullet).toBeDisplayed();
-            await expect(page.copyrightBullet).toBeDisplayed();
-            await expect(page.patentsBullet).toBeDisplayed();
-            await expect(page.reviewBullet).toBeDisplayed();
-            await expect(page.applyBullet).toBeDisplayed();
+            const flaText = await applyPage.applyResultHtmlFlaText.getValue();
+            await expect(flaText).to.include('Fiduciary');
+            await expect(flaText).to.not.be.empty;
         });
 
-        it('should have next and previous buttons visible', async function() {
-            await expect(page.nextBtn).toBeDisplayed();
-            await expect(page.previousBtn).toBeDisplayed();
+        it('should generate FLA entity text when FSFE compliance is selected', async function() {
+            await page.open();
+            await GeneralPage.selectFsfeCompliance();
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const flaEntityText = await applyPage.applyResultHtmlFlaEntityText.getValue();
+            await expect(flaEntityText).to.include('Fiduciary');
+            await expect(flaEntityText).to.not.be.empty;
         });
 
-        it('should start on the general page by default', async function() {
-            const generalBullet = await page.generalBullet;
-            const parentLi = await generalBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
+        it('should generate CLA text when non-FSFE compliance is selected', async function() {
+            await page.open();
+            await GeneralPage.selectNonFsfeCompliance();
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const claText = await applyPage.applyResultHtmlClaText.getValue();
+            await expect(claText).to.not.include('Fiduciary');
+            await expect(claText).to.include('Contributor License Agreement');
+            await expect(claText).to.not.be.empty;
         });
 
-    });
+        it('should generate CLA entity text when non-FSFE compliance is selected', async function() {
+            await page.open();
+            await GeneralPage.selectNonFsfeCompliance();
+            await page.goThroughAll();
+            await browser.pause(500);
 
-    describe('Wizard Navigation - Sequential Flow', async function() {
-
-        it('should navigate from general to copyright page using next button', async function() {
-            await page.next();
-            const copyrightBullet = await page.copyrightBullet;
-            const parentLi = await copyrightBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-        });
-
-        it('should navigate through all pages sequentially using next button', async function() {
-            // Start at general
-            await page.next(); // Move to copyright
-            await browser.pause(300);
-
-            let copyrightBullet = await page.copyrightBullet;
-            let parentLi = await copyrightBullet.parentElement();
-            let classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-
-            await page.next(); // Move to patents
-            await browser.pause(300);
-
-            let patentsBullet = await page.patentsBullet;
-            parentLi = await patentsBullet.parentElement();
-            classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-
-            await page.next(); // Move to review
-            await browser.pause(300);
-
-            let reviewBullet = await page.reviewBullet;
-            parentLi = await reviewBullet.parentElement();
-            classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-
-            await page.next(); // Move to apply
-            await browser.pause(300);
-
-            let applyBullet = await page.applyBullet;
-            parentLi = await applyBullet.parentElement();
-            classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-        });
-
-        it('should navigate backwards using previous button', async function() {
-            await page.goThroughAll(); // Navigate to apply page
-            await browser.pause(300);
-
-            await page.previous(); // Go back to review
-            await browser.pause(300);
-
-            const reviewBullet = await page.reviewBullet;
-            const parentLi = await reviewBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-        });
-
-        it('should navigate back from apply to general using previous button', async function() {
-            await page.goThroughAll(); // Navigate to apply page
-
-            await page.previous(); // review
-            await browser.pause(200);
-            await page.previous(); // patents
-            await browser.pause(200);
-            await page.previous(); // copyright
-            await browser.pause(200);
-            await page.previous(); // general
-            await browser.pause(300);
-
-            const generalBullet = await page.generalBullet;
-            const parentLi = await generalBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
+            const claEntityText = await applyPage.applyResultHtmlClaEntityText.getValue();
+            await expect(claEntityText).to.not.include('Fiduciary');
+            await expect(claEntityText).to.include('Contributor License Agreement');
+            await expect(claEntityText).to.not.be.empty;
         });
 
     });
 
-    describe('Wizard Navigation - Direct Bullet Clicks', async function() {
+    describe('Outbound License Options in Generated Text', async function() {
 
-        it('should navigate directly to copyright page when clicking its bullet', async function() {
+        it('should include FSFE license text when FSFE outbound option is selected', async function() {
+            await page.open();
+            await GeneralPage.selectFsfeCompliance();
             await page.gotoCopyright();
             await browser.pause(300);
+            await CopyrightPage.selectOutboundFsf();
+            await page.goThroughAll();
+            await browser.pause(500);
 
-            const copyrightBullet = await page.copyrightBullet;
-            const parentLi = await copyrightBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
+            const flaText = await applyPage.applyResultHtmlFlaText.getValue();
+            await expect(flaText).to.include('Free Software Foundation');
         });
 
-        it('should navigate directly to patents page when clicking its bullet', async function() {
+        it('should include license policy text when license policy option is selected', async function() {
+            await page.open();
+            await GeneralPage.selectNonFsfeCompliance();
+            await page.gotoCopyright();
+            await browser.pause(300);
+            await CopyrightPage.selectOutboundLicensePolicy();
+
+            const licensePolicyField = await $('#license-policy-location');
+            await licensePolicyField.setValue('https://example.org/license-policy');
+
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const claText = await applyPage.applyResultHtmlClaText.getValue();
+            await expect(claText).to.include('license-policy');
+        });
+
+        it('should include same license text when same licenses option is selected', async function() {
+            await page.open();
+            await GeneralPage.selectFsfeCompliance();
+            await page.gotoCopyright();
+            await browser.pause(300);
+            await CopyrightPage.selectOutboundListedLicenses();
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const flaText = await applyPage.applyResultHtmlFlaText.getValue();
+            // Should contain text about specific licenses
+            await expect(flaText).to.not.be.empty;
+            await expect(flaText.length).to.be.greaterThan(1000);
+        });
+
+        it('should include no commitment text when no commitment option is selected', async function() {
+            await page.open();
+            await GeneralPage.selectNonFsfeCompliance();
+            await page.gotoCopyright();
+            await browser.pause(300);
+            await CopyrightPage.selectOutboundNoCommitment();
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const claText = await applyPage.applyResultHtmlClaText.getValue();
+            await expect(claText).to.include('no commitment');
+        });
+
+    });
+
+    describe('Patent Options in Generated Text', async function() {
+
+        it('should include Traditional Patent License text when traditional option is selected', async function() {
+            await page.open();
+            await GeneralPage.selectNonFsfeCompliance();
             await page.gotoPatents();
             await browser.pause(300);
 
-            const patentsBullet = await page.patentsBullet;
-            const parentLi = await patentsBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
+            const patentType = await $('#patent-type');
+            await patentType.selectByAttribute('value', 'Traditional');
+
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const claText = await applyPage.applyResultHtmlClaText.getValue();
+            await expect(claText).to.include('patent');
         });
 
-        it('should navigate directly to review page when clicking its bullet', async function() {
-            await page.gotoReview();
-            await browser.pause(300);
-
-            const reviewBullet = await page.reviewBullet;
-            const parentLi = await reviewBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-        });
-
-        it('should navigate directly to apply page when clicking its bullet', async function() {
-            await page.gotoApply();
-            await browser.pause(300);
-
-            const applyBullet = await page.applyBullet;
-            const parentLi = await applyBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-        });
-
-        it('should allow navigation back to general page after visiting other pages', async function() {
-            await page.gotoApply();
-            await browser.pause(300);
-            await page.gotoGeneral();
-            await browser.pause(300);
-
-            const generalBullet = await page.generalBullet;
-            const parentLi = await generalBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-        });
-
-    });
-
-    describe('Wizard Navigation - Mixed Navigation', async function() {
-
-        it('should handle mixed navigation (bullets and buttons)', async function() {
-            await page.next(); // copyright
-            await browser.pause(200);
-            await page.gotoPatents(); // jump to patents
-            await browser.pause(200);
-            await page.previous(); // back to copyright
-            await browser.pause(200);
-            await page.gotoReview(); // jump to review
-            await browser.pause(300);
-
-            const reviewBullet = await page.reviewBullet;
-            const parentLi = await reviewBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-        });
-
-        it('should navigate non-sequentially using bullets', async function() {
-            await page.gotoApply();
-            await browser.pause(200);
-            await page.gotoGeneral();
-            await browser.pause(200);
-            await page.gotoReview();
-            await browser.pause(200);
-            await page.gotoCopyright();
-            await browser.pause(300);
-
-            const copyrightBullet = await page.copyrightBullet;
-            const parentLi = await copyrightBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-        });
-
-    });
-
-    describe('Wizard State Management', async function() {
-
-        it('should maintain only one active tab at a time', async function() {
-            await page.gotoCopyright();
-            await browser.pause(300);
-
-            const generalBullet = await page.generalBullet;
-            const generalParentLi = await generalBullet.parentElement();
-            const generalClasses = await generalParentLi.getAttribute('class');
-
-            const copyrightBullet = await page.copyrightBullet;
-            const copyrightParentLi = await copyrightBullet.parentElement();
-            const copyrightClasses = await copyrightParentLi.getAttribute('class');
-
-            await expect(generalClasses).to.not.include('active');
-            await expect(copyrightClasses).to.include('active');
-        });
-
-        it('should properly activate tab when navigating forward', async function() {
-            await page.gotoGeneral();
-            await browser.pause(200);
-
-            for (let i = 0; i < 3; i++) {
-                await page.next();
-                await browser.pause(200);
-            }
-
-            const reviewBullet = await page.reviewBullet;
-            const parentLi = await reviewBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-        });
-
-        it('should deactivate previous tab when moving to next tab', async function() {
-            await page.gotoGeneral();
-            await browser.pause(300);
-
-            const generalBullet = await page.generalBullet;
-            let generalParentLi = await generalBullet.parentElement();
-            let generalClasses = await generalParentLi.getAttribute('class');
-            await expect(generalClasses).to.include('active');
-
-            await page.next();
-            await browser.pause(300);
-
-            generalParentLi = await generalBullet.parentElement();
-            generalClasses = await generalParentLi.getAttribute('class');
-            await expect(generalClasses).to.not.include('active');
-        });
-
-    });
-
-    describe('Wizard Tab Visibility', async function() {
-
-        it('should show general tab content when on general page', async function() {
-            await page.gotoGeneral();
-            await browser.pause(300);
-
-            const generalTab = await $('#general');
-            const isDisplayed = await generalTab.isDisplayed();
-            await expect(isDisplayed).to.be.true;
-        });
-
-        it('should show copyright tab content when on copyright page', async function() {
-            await page.gotoCopyright();
-            await browser.pause(300);
-
-            const copyrightTab = await $('#copyright');
-            const isDisplayed = await copyrightTab.isDisplayed();
-            await expect(isDisplayed).to.be.true;
-        });
-
-        it('should show patents tab content when on patents page', async function() {
+        it('should include Patent Pledge text when patent pledge option is selected', async function() {
+            await page.open();
+            await GeneralPage.selectNonFsfeCompliance();
             await page.gotoPatents();
             await browser.pause(300);
 
-            const patentsTab = await $('#patents');
-            const isDisplayed = await patentsTab.isDisplayed();
-            await expect(isDisplayed).to.be.true;
-        });
+            const patentType = await $('#patent-type');
+            await patentType.selectByAttribute('value', 'Patent-Pledge');
 
-        it('should show review tab content when on review page', async function() {
-            await page.gotoReview();
-            await browser.pause(300);
+            await page.goThroughAll();
+            await browser.pause(500);
 
-            const reviewTab = await $('#review');
-            const isDisplayed = await reviewTab.isDisplayed();
-            await expect(isDisplayed).to.be.true;
-        });
-
-        it('should show apply tab content when on apply page', async function() {
-            await page.gotoApply();
-            await browser.pause(300);
-
-            const applyTab = await $('#apply');
-            const isDisplayed = await applyTab.isDisplayed();
-            await expect(isDisplayed).to.be.true;
-        });
-
-        it('should hide previous tab content when navigating to next tab', async function() {
-            await page.gotoGeneral();
-            await browser.pause(300);
-
-            const generalTab = await $('#general');
-            let generalDisplayed = await generalTab.isDisplayed();
-            await expect(generalDisplayed).to.be.true;
-
-            await page.next();
-            await browser.pause(300);
-
-            generalDisplayed = await generalTab.isDisplayed();
-            await expect(generalDisplayed).to.be.false;
+            const claText = await applyPage.applyResultHtmlClaText.getValue();
+            await expect(claText).to.include('pledge');
         });
 
     });
 
-    describe('Wizard Navigation Bounds', async function() {
+    describe('Custom Project Information in Generated Text', async function() {
 
-        it('should not break when clicking next on the last page', async function() {
-            await page.goThroughAll(); // Navigate to apply (last page)
-            await browser.pause(300);
-
-            // Try clicking next on last page (should not break)
-            await page.next();
-            await browser.pause(300);
-
-            // Should still be on apply page
-            const applyBullet = await page.applyBullet;
-            const parentLi = await applyBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
-        });
-
-        it('should not break when clicking previous on the first page', async function() {
+        it('should include project name in generated FLA text', async function() {
+            await page.open();
+            await GeneralPage.selectFsfeCompliance();
             await page.gotoGeneral();
             await browser.pause(300);
 
-            // Try clicking previous on first page (should not break)
-            await page.previous();
+            const projectName = 'Test Project Name';
+            await GeneralPage.setProjectName(projectName);
+
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const flaText = await applyPage.applyResultHtmlFlaText.getValue();
+            await expect(flaText).to.include(projectName);
+        });
+
+        it('should include beneficiary name in generated FLA text', async function() {
+            await page.open();
+            await GeneralPage.selectFsfeCompliance();
+            await page.gotoGeneral();
             await browser.pause(300);
 
-            // Should still be on general page
-            const generalBullet = await page.generalBullet;
-            const parentLi = await generalBullet.parentElement();
-            const classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
+            const beneficiaryName = 'Test Beneficiary Name';
+            await GeneralPage.setBeneficiary(beneficiaryName);
+
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const flaText = await applyPage.applyResultHtmlFlaText.getValue();
+            await expect(flaText).to.include(beneficiaryName);
+        });
+
+        it('should include project email in generated CLA text', async function() {
+            await page.open();
+            await GeneralPage.selectNonFsfeCompliance();
+            await page.gotoGeneral();
+            await browser.pause(300);
+
+            const projectEmail = 'test@example.org';
+            await GeneralPage.setProjectEmail(projectEmail);
+
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const claText = await applyPage.applyResultHtmlClaText.getValue();
+            await expect(claText).to.include(projectEmail);
+        });
+
+        it('should include jurisdiction in generated text', async function() {
+            await page.open();
+            await GeneralPage.selectFsfeCompliance();
+            await page.gotoGeneral();
+            await browser.pause(300);
+
+            const jurisdiction = 'Germany';
+            await GeneralPage.setJurisdiction(jurisdiction);
+
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const flaText = await applyPage.applyResultHtmlFlaText.getValue();
+            await expect(flaText).to.include(jurisdiction);
         });
 
     });
 
-    describe('Wizard Bullet Link Structure', async function() {
+    describe('Individual vs Entity Agreement Types', async function() {
 
-        it('should have correct href for general bullet', async function() {
-            const generalBullet = await page.generalBullet;
-            const href = await generalBullet.getAttribute('href');
-            await expect(href).to.include('#general');
+        it('should generate different text for individual vs entity FLA', async function() {
+            await page.open();
+            await GeneralPage.selectFsfeCompliance();
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const flaIndividualText = await applyPage.applyResultHtmlFlaText.getValue();
+            const flaEntityText = await applyPage.applyResultHtmlFlaEntityText.getValue();
+
+            // They should be different
+            await expect(flaIndividualText).to.not.equal(flaEntityText);
+            // Both should contain Fiduciary
+            await expect(flaIndividualText).to.include('Fiduciary');
+            await expect(flaEntityText).to.include('Fiduciary');
+            // Entity version should have entity-specific text
+            await expect(flaEntityText).to.include('Entity');
         });
 
-        it('should have correct href for copyright bullet', async function() {
-            const copyrightBullet = await page.copyrightBullet;
-            const href = await copyrightBullet.getAttribute('href');
-            await expect(href).to.include('#copyright');
-        });
+        it('should generate different text for individual vs entity CLA', async function() {
+            await page.open();
+            await GeneralPage.selectNonFsfeCompliance();
+            await page.goThroughAll();
+            await browser.pause(500);
 
-        it('should have correct href for patents bullet', async function() {
-            const patentsBullet = await page.patentsBullet;
-            const href = await patentsBullet.getAttribute('href');
-            await expect(href).to.include('#patents');
-        });
+            const claIndividualText = await applyPage.applyResultHtmlClaText.getValue();
+            const claEntityText = await applyPage.applyResultHtmlClaEntityText.getValue();
 
-        it('should have correct href for review bullet', async function() {
-            const reviewBullet = await page.reviewBullet;
-            const href = await reviewBullet.getAttribute('href');
-            await expect(href).to.include('#review');
-        });
-
-        it('should have correct href for apply bullet', async function() {
-            const applyBullet = await page.applyBullet;
-            const href = await applyBullet.getAttribute('href');
-            await expect(href).to.include('#apply');
+            // They should be different
+            await expect(claIndividualText).to.not.equal(claEntityText);
+            // Both should contain Contributor License Agreement
+            await expect(claIndividualText).to.include('Contributor License Agreement');
+            await expect(claEntityText).to.include('Contributor License Agreement');
+            // Entity version should have entity-specific text
+            await expect(claEntityText).to.include('Entity');
         });
 
     });
 
-    describe('Wizard Complete Flow', async function() {
+    describe('Document Format Options', async function() {
 
-        it('should successfully complete entire wizard flow forward and backward', async function() {
-            // Go forward through all pages
-            await page.gotoGeneral();
-            await browser.pause(200);
+        it('should generate both HTML and Markdown formats for FLA', async function() {
+            await page.open();
+            await GeneralPage.selectFsfeCompliance();
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const htmlText = await applyPage.applyResultHtmlFlaText.getValue();
+            const mkdnText = await applyPage.applyResultMkdnFlaText.getValue();
+
+            await expect(htmlText).to.not.be.empty;
+            await expect(mkdnText).to.not.be.empty;
+            // HTML should contain HTML tags
+            await expect(htmlText).to.include('<');
+            // Markdown should not have as many HTML tags (or different format)
+            await expect(mkdnText).to.not.equal(htmlText);
+        });
+
+        it('should generate both HTML and Markdown formats for CLA', async function() {
+            await page.open();
+            await GeneralPage.selectNonFsfeCompliance();
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const htmlText = await applyPage.applyResultHtmlClaText.getValue();
+            const mkdnText = await applyPage.applyResultMkdnClaText.getValue();
+
+            await expect(htmlText).to.not.be.empty;
+            await expect(mkdnText).to.not.be.empty;
+            // HTML should contain HTML tags
+            await expect(htmlText).to.include('<');
+            // Markdown should be different from HTML
+            await expect(mkdnText).to.not.equal(htmlText);
+        });
+
+    });
+
+    describe('Complete Workflow Output Validation', async function() {
+
+        it('should generate complete FLA with all custom fields and options', async function() {
+            await page.open();
+            await GeneralPage.selectFsfeCompliance();
+
+            // Set all custom fields
+            await GeneralPage.setBeneficiary('FSFE e.V.');
+            await GeneralPage.setProjectName('GNU Test Project');
+            await GeneralPage.setProjectEmail('legal@fsfe.org');
+            await GeneralPage.setJurisdiction('Germany');
+
             await page.gotoCopyright();
-            await browser.pause(200);
-            await page.gotoPatents();
-            await browser.pause(200);
-            await page.gotoReview();
-            await browser.pause(200);
-            await page.gotoApply();
             await browser.pause(300);
+            await CopyrightPage.selectOutboundFsf();
 
-            let applyBullet = await page.applyBullet;
-            let parentLi = await applyBullet.parentElement();
-            let classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
+            await page.goThroughAll();
+            await browser.pause(500);
 
-            // Go backward through all pages
-            await page.gotoReview();
-            await browser.pause(200);
-            await page.gotoPatents();
-            await browser.pause(200);
+            const flaText = await applyPage.applyResultHtmlFlaText.getValue();
+
+            // Verify all fields appear in output
+            await expect(flaText).to.include('FSFE e.V.');
+            await expect(flaText).to.include('GNU Test Project');
+            await expect(flaText).to.include('legal@fsfe.org');
+            await expect(flaText).to.include('Germany');
+            await expect(flaText).to.include('Fiduciary');
+            await expect(flaText).to.include('Free Software Foundation');
+        });
+
+        it('should generate complete CLA with all custom fields and options', async function() {
+            await page.open();
+            await GeneralPage.selectNonFsfeCompliance();
+
+            // Set all custom fields
+            await GeneralPage.setBeneficiary('Test Organization');
+            await GeneralPage.setProjectName('Open Source Test');
+            await GeneralPage.setProjectEmail('admin@test.org');
+            await GeneralPage.setJurisdiction('United States');
+
             await page.gotoCopyright();
-            await browser.pause(200);
-            await page.gotoGeneral();
+            await browser.pause(300);
+            await CopyrightPage.selectOutboundSameOnDate();
+
+            await page.gotoPatents();
+            await browser.pause(300);
+            const patentType = await $('#patent-type');
+            await patentType.selectByAttribute('value', 'Traditional');
+
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const claText = await applyPage.applyResultHtmlClaText.getValue();
+
+            // Verify all fields appear in output
+            await expect(claText).to.include('Test Organization');
+            await expect(claText).to.include('Open Source Test');
+            await expect(claText).to.include('admin@test.org');
+            await expect(claText).to.include('United States');
+            await expect(claText).to.include('Contributor License Agreement');
+            await expect(claText).to.not.include('Fiduciary');
+        });
+
+    });
+
+    describe('Agreement Exclusivity in Output', async function() {
+
+        it('should reflect exclusive license in FLA output', async function() {
+            await page.open();
+            await GeneralPage.selectFsfeCompliance();
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const flaText = await applyPage.applyResultHtmlFlaText.getValue();
+            await expect(flaText).to.include('exclusive');
+        });
+
+        it('should reflect selected exclusivity option in CLA output', async function() {
+            await page.open();
+            await GeneralPage.selectNonFsfeCompliance();
+            await page.gotoCopyright();
             await browser.pause(300);
 
-            const generalBullet = await page.generalBullet;
-            parentLi = await generalBullet.parentElement();
-            classNames = await parentLi.getAttribute('class');
-            await expect(classNames).to.include('active');
+            const exclusivitySelect = await $('#agreement-exclusivity');
+            await exclusivitySelect.selectByAttribute('value', 'exclusive');
+
+            await page.goThroughAll();
+            await browser.pause(500);
+
+            const claText = await applyPage.applyResultHtmlClaText.getValue();
+            await expect(claText).to.include('exclusive');
         });
 
     });
