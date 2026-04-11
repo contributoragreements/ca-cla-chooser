@@ -645,53 +645,6 @@ function getEmbedCode ( ourQuery )
 }
 
 /*
- * This function renumbers the relevant sections. Specifically necessary after removing or adding sections, but right probably ddone all the time to be sure. FIXME is it really necessary?
- */
-
-function putBackOrderOfSectionsAfterSection4 ()
-{
-    $('#review-text #tmp-digit-disclaimer').html( '5.' );
-    $('#review-text #tmp-digit-waiver').html( '6.' );
-    $('#review-text #tmp-digit-approx-waiver').html( '7.' );
-    $('#review-text #tmp-digit-disclaimer-2').html( '5.' );
-    $('#review-text #tmp-digit-waiver-2').html( '6.' );
-    $('#review-text #tmp-digit-term').html( '8.' );
-    $('#review-text #tmp-digit-term-1').html( '8.1' );
-    $('#review-text #tmp-digit-term-2').html( '8.2' );
-    $('#review-text #tmp-digit-term-3').html( '8.3' );
-    $('#review-text #tmp-digit-term-special').html( '5, 6, 7, 8 and 9' );
-    $('#review-text #tmp-digit-misc').html( '9' );
-    $('#review-text #tmp-digit-misc-1').html( '9.1' );
-    $('#review-text #tmp-digit-misc-2').html( '9.2' );
-    $('#review-text #tmp-digit-misc-3').html( '9.3' );
-    $('#review-text #tmp-digit-misc-4').html( '9.4' );
-    $('#review-text #tmp-digit-misc-5').html( '9.5' );
-
-    $('#review-text-entity #tmp-digit-disclaimer').html( '5.' );
-    $('#review-text-entity #tmp-digit-waiver').html( '6.' );
-    $('#review-text-entity #tmp-digit-approx-waiver').html( '7.' );
-    $('#review-text-entity #tmp-digit-disclaimer-2').html( '5.' );
-    $('#review-text-entity #tmp-digit-waiver-2').html( '6.' );
-    $('#review-text-entity #tmp-digit-term').html( '8.' );
-    $('#review-text-entity #tmp-digit-term-1').html( '8.1' );
-    $('#review-text-entity #tmp-digit-term-2').html( '8.2' );
-    $('#review-text-entity #tmp-digit-term-3').html( '8.3' );
-    $('#review-text-entity #tmp-digit-term-special').html( '5, 6, 7, 8 and 9' );
-    $('#review-text-entity #tmp-digit-misc').html( '9' );
-    $('#review-text-entity #tmp-digit-misc-1').html( '9.1' );
-    $('#review-text-entity #tmp-digit-misc-2').html( '9.2' );
-    $('#review-text-entity #tmp-digit-misc-3').html( '9.3' );
-    $('#review-text-entity #tmp-digit-misc-4').html( '9.4' );
-    $('#review-text-entity #tmp-digit-misc-5').html( '9.5' );
-
-    // FIXME this is never hidden as das as I can tell, so could maybe be removed
-    $('#review-text #tmp-term-special').show();
-    $('#review-text #tmp-term-special').removeClass("nuke");
-    $('#review-text-entity #tmp-term-special').show();
-    $('#review-text-entity #tmp-term-special').removeClass("nuke");
-}
-
-/*
 * This sets the outbound options as compatible with the FSFE FLA, or compatible with licenses sanctioned by the FSF or OSI.
 */
 
@@ -715,8 +668,6 @@ function setOutboundOptionFsfe ()
     $('#review-text #tmp-licenses-2').html( fsfeField );
     $('#review-text-entity #tmp-licenses-2').html( fsfeField );
 
-    /* put back order of sections after section 4 */
-    putBackOrderOfSectionsAfterSection4();
     // Enables outbound option 1 for all cla/fla indiv/entity (outbound under FSF sanctioned licenses)
     $('#review-text-fla #tmp-outbound-option-1-fsfe').show();
     $('#review-text-fla #tmp-outbound-option-1-fsfe').removeClass("nuke");
@@ -790,9 +741,6 @@ function setOutboundOptionSameLicenses ()
 //    $('#review-text-entity #tmp-licenses-2').html( outboundCopyrightLicenses ); FIXME check, b/c I think this does not exist
     // set the config options for the license list
     configs['outboundlist'] = outboundCopyrightLicenses;
-
-    /* put back order of sections after section 4 */
-    putBackOrderOfSectionsAfterSection4();
 
     // this if else inserts the requisite patent license paragraph
     if ( !outboundCopyrightLicenses )
@@ -922,9 +870,6 @@ function setOutboundOptionSameLicenses ()
     // insert fsfeField into special outbound paragraph (#tmp-outbound-special) for patent licensing (promise to only license patents in so far as necessary for sublicensing and combination under specified licenses
     $('#review-text #tmp-licenses-2').html( fsfeField );
     $('#review-text-entity #tmp-licenses-2').html( fsfeField );
-
-    /* put back order of sections after section 4 */
-    putBackOrderOfSectionsAfterSection4();
 }
 
 /*
@@ -945,8 +890,6 @@ function setOutboundOptionSame ()
     $('#review-text #tmp-licenses-2').html( emptyField );
     $('#review-text-entity #tmp-licenses-2').html( emptyField );
 
-    /* put back order of sections after section 4 */
-    putBackOrderOfSectionsAfterSection4();
     // inserts into tmp-outbound-special
     fixPatentParagraph( 'the license or licenses that We ' +
                         'are using on the Submission Date' );
