@@ -34,6 +34,6 @@ jobs:
           distDir: / # Path to dist directory
           teardown: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }} # GitHub token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub token
           SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }} # Surge.sh email
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }} # Surge.sh token
