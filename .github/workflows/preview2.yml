@@ -13,8 +13,7 @@ jobs:
         id: preview_step
         with:
           surge_token: ${{ secrets.SURGE_TOKEN }}
-          dist: public
-          build: |
-            npm ci
+          dist: .
+          build: npm ci
       - name: Get the preview_url
         run: echo "url => ${{ steps.preview_step.outputs.preview_url }}"
