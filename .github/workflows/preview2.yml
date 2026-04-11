@@ -1,6 +1,8 @@
 name: Surge PR Preview
 
-on: [pull_request]
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, closed]
 
 jobs:
   preview:
@@ -9,10 +11,13 @@ jobs:
       pull-requests: write # allow surge-preview to create/update PR comments
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: afc163/surge-preview@v1
         id: preview_step
         with:
           surge_token: ${{ secrets.SURGE_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           dist: public
           build: |
             npm install
