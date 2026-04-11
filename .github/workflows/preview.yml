@@ -30,7 +30,7 @@ jobs:
         uses: koj-co/deploy-pr-action@v1.0.1
         with:
           prefix: fla-cla # Prefix for deployment URL
-          distDir: / # Path to dist directory
+          distDir: . # Path to dist directory
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub token
           SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }} # Surge.sh email
