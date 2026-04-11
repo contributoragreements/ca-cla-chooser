@@ -12,8 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, ubuntu-latest]
-        node-version: [18.x, 20.x]
+        os: [macos-15, ubuntu-latest]
+        node-version: [22.x, 24.x]
     runs-on: ${{ matrix.os }}
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
