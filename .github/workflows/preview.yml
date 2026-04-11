@@ -52,6 +52,7 @@ jobs:
         with:
           prefix: fla-cla # Prefix for deployment URL
           distDir: / # Path to dist directory
+          teardown: true
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }} # GitHub token
           SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }} # Surge.sh email
