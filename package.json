@@ -29,9 +29,7 @@
     "nyc": "^15.1.0",
     "wdio-wait-for": "^3.0.11",
     "webdriverio": "^8.32.1",
-    "devDependencies": {
     "surge": "latest",
     "git-scripts": "0.2.1"
 }
-  }
 }
