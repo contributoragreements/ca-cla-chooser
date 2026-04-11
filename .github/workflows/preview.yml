@@ -1,4 +1,4 @@
-name: Deploy CI
+name: Preview CI
 on:
   issue_comment:
     types: [created]
