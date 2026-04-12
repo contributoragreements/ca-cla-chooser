@@ -13,6 +13,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+      - name: Generate config files
+        run: |
+          git rev-parse --short HEAD > version.log
+          echo '{"serviceUrl":"https://contributoragreements.org","urlShortener":"https://contributoragreements.org/u2s"}' > js/config.json
       - uses: step21/surge-preview-fork@first-release
         id: preview_step
         with:
