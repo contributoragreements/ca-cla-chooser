@@ -98,6 +98,7 @@ function extractKeyPhrases(txt) {
  * Returns { status, issues[], infoNotes[] }.
  *
  * opts.outboundOption — the outbound-option param for this path (e.g. 'no-commitment').
+ * opts.patentOption   — the patent-option param for this path (e.g. 'Patent-Pledge'). CLA only.
  *
  * NOTE: the reference .txt files in agreement_texts/ were generated from the
  * old template (pre-legal-changes branch). They are used here as informational
@@ -163,7 +164,24 @@ function validateHtml(html, refTxt, opts) {
         }
     }
 
-    // 8. Reference file comparison — informational only, not failures.
+    // 8. Patent option sections: correct one present, wrong one absent. CLA only.
+    if (opts && opts.patentOption) {
+        const traditionalEl = $('#tmp-patent-option-traditional')
+        const pledgeEl      = $('#tmp-patent-option-pledge')
+        if (opts.patentOption === 'Traditional') {
+            if (traditionalEl.length === 0)
+                issues.push('Traditional patent section (#tmp-patent-option-traditional) missing for patent:Traditional')
+            if (pledgeEl.length > 0)
+                issues.push('Pledge patent section (#tmp-patent-option-pledge) present but should be absent for patent:Traditional')
+        } else if (opts.patentOption === 'Patent-Pledge') {
+            if (pledgeEl.length === 0)
+                issues.push('Pledge patent section (#tmp-patent-option-pledge) missing for patent:Patent-Pledge')
+            if (traditionalEl.length > 0)
+                issues.push('Traditional patent section (#tmp-patent-option-traditional) present but should be absent for patent:Patent-Pledge')
+        }
+    }
+
+    // 9. Reference file comparison — informational only, not failures.
     // The reference files predate the legal-changes rewrite so differences are expected.
     if (refTxt) {
         const missing = []
@@ -360,7 +378,7 @@ describe('Agreement Chooser Harness', function () {
                     const html = await getHtmlFromModal(btn, modal, textarea)
                     logText(`${wizardPath.label} / individual HTML`, html)
                     const refTxt = loadRef(wizardPath.refPrefix, 'indiv', 'txt')
-                    const opts = { outboundOption: wizardPath.params['outbound-option'] }
+                    const opts = { outboundOption: wizardPath.params['outbound-option'], patentOption: wizardPath.params['patent-option'] }
                     const { status, issues, infoNotes } = validateHtml(html, refTxt, opts)
                     collectViewerDoc(wizardPath.label, 'individual', html, status)
                     const details = refTxt ? issues : ['(no reference txt — structural check only)', ...issues]
@@ -384,7 +402,7 @@ describe('Agreement Chooser Harness', function () {
                     const html = await getHtmlFromModal(btn, modal, textarea)
                     logText(`${wizardPath.label} / entity HTML`, html)
                     const refTxt = loadRef(wizardPath.refPrefix, 'entity', 'txt')
-                    const opts = { outboundOption: wizardPath.params['outbound-option'] }
+                    const opts = { outboundOption: wizardPath.params['outbound-option'], patentOption: wizardPath.params['patent-option'] }
                     const { status, issues, infoNotes } = validateHtml(html, refTxt, opts)
                     collectViewerDoc(wizardPath.label, 'entity', html, status)
                     const details = refTxt ? issues : ['(no reference txt — structural check only)', ...issues]
