@@ -160,7 +160,7 @@ let selected = []   // up to 2 doc objects
 
 async function init() {
     try {
-        const res = await fetch('harness-texts.json')
+        const res = await fetch('harness-texts.json?_=' + Date.now())
         if (!res.ok) throw new Error(`HTTP ${res.status} — run npm run harness first`)
         data = await res.json()
         document.getElementById('header-generated').textContent =
