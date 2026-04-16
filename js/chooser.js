@@ -342,6 +342,7 @@ function updateConfigs ()
             $("#outbound-option-same" ).trigger( 'change' );
             // @todo delete later if no need
             // setOutboundOptionSame();
+            break;
         // option-5
         case 'no-commitment':
             $("#outbound-option-no-commitment").prop('checked', true );
@@ -1366,8 +1367,8 @@ function testReviewPage ()
             {
                 $('#review-text-fla #tmp-contributor-exclusivity-2').html("exclusive");
                 $('#review-text-fla-entity #tmp-contributor-exclusivity-2').html("exclusive");
-                $('#review-text #tmp-contributor-exclusivity-2').html("Exclusive");
-                $('#review-text-entity #tmp-contributor-exclusivity-2').html("Exclusive");
+                $('#review-text #tmp-contributor-exclusivity-2').html("exclusive");
+                $('#review-text-entity #tmp-contributor-exclusivity-2').html("exclusive");
                 $('#review-text #tmp-license-back').show();
                 $('#review-text #tmp-license-back').removeClass("nuke");
                 $('#review-text-entity #tmp-license-back').show();
@@ -1800,7 +1801,10 @@ $(document).ready(function() {
         $("#non-exclusive").remove();
         $("#outbound-option-4-label").hide();
         $("#outbound-option-5-label").hide();
-        $("#outbound-option-fsfe").prop("checked", true);
+        var currentOutbound = configs["outbound-option"];
+        if (!currentOutbound || currentOutbound === 'same' || currentOutbound === 'no-commitment') {
+            $("#outbound-option-fsfe").prop("checked", true);
+        }
         $("#license-policy-location").hide();
         $("#medialist-label").hide();
         $("#medialist").hide();
@@ -1846,8 +1850,9 @@ $(document).ready(function() {
         $("#patent-type-fsfe").hide();
         // FIXME Probably remove adding patent pledge here, as it then exists double
         $('<option id="patent-pledge" value="Patent-Pledge">Identified Patent Pledge</option>').appendTo("#patent-type");
-        // FIXME this probably also has to be remove, as
-        $('select[name*="patent-type"] option[value="Traditional"]').prop('selected', true);
+        if (!configs["patent-option"]) {
+            $('select[name*="patent-type"] option[value="Traditional"]').prop('selected', true);
+        }
         $("#review-media-licenses-line").show();
         $("#review-text").closest( "ul" ).show();
         $("#review-text-entity").closest( "ul" ).show();
