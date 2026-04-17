@@ -8,10 +8,10 @@ class GeneralPage extends Page {
     get btnNonFsfeCompliance () { return $('#non-fsfe-compliance') }
     get fieldBeneficiaryName () { return $('#beneficiary-name') }
     get fieldProjectName () { return $('#project-name') }
-    get fieldProjectWebsite () { return ('#project-website') }
+    get fieldProjectWebsite () { return $('#project-website') }
     get fieldProjectEmail () { return $('#project-email') }
-    get fieldContributorSigningProcessWebsite () { return ('#contributor-process-url') }
-    get fieldJurisdiction () { return ('#project-jurisdiction') }
+    get fieldContributorSigningProcessWebsite () { return $('#contributor-process-url') }
+    get fieldJurisdiction () { return $('#project-jurisdiction') }
 
     // TODO Test all buttons / fields
     async selectFsfeCompliance() {
