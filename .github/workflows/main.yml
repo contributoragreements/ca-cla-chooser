@@ -25,5 +25,5 @@ jobs:
         #cipher: diffie-hellman-group-exchange-sha256
         debug: true
         script: |
-          cd ~/contributoragreements.org/ca-cla-chooser
+          cd /var/www/virtual/scom/contributoragreements.org/ca-cla-chooser
           git pull origin main
