@@ -23,6 +23,9 @@ jobs:
           surge_token: ${{ secrets.SURGE_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dist: .
-          build: npm ci
+          build: |
+            npm ci
+            git rev-parse --short HEAD > version.log
+            echo '{"serviceUrl":"https://contributoragreements.org","urlShortener":"https://contributoragreements.org/u2s"}' > js/config.json
       - name: Get the preview_url
         run: echo "url => ${{ steps.preview_step.outputs.preview_url }}"
