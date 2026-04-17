@@ -1422,10 +1422,10 @@ function testReviewPage ()
             // sets the config to the requisite list of licenses
             configs['outboundlist-custom'] = $("#outboundlist-custom").val();
 
-            // set the lise of media licenses in the document text
+            // set the list of media licenses in the document text
             $("#review-media-licenses").html(
                 mediaLicenses );
-            configs['medialist'] = mediaLicenses;
+            configs['medialist'] = (mediaLicenses === emptyField) ? '' : mediaLicenses;
 
             // hide the media licenses part in the text for FLA versions
             $('#review-text-fla #tmp-outbound-media-license').hide();
