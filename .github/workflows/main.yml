@@ -21,8 +21,8 @@ jobs:
         #password: ${{ secrets.PASSWORD }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.KEY }}
-        use_insecure_cipher: true
-        cipher: diffie-hellman-group-exchange-sha256
+        #use_insecure_cipher: true
+        #cipher: diffie-hellman-group-exchange-sha256
         debug: true
         script: |
           cd ~/contributoragreements.org/ca-cla-chooser
