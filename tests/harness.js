@@ -5,7 +5,7 @@ const path = require('path')
 const cheerio = require('cheerio')
 
 const BASE_URL = 'http://localhost:4000'
-const REFS_DIR = path.resolve(__dirname, '..', 'agreement_texts')
+const REFS_DIR = path.resolve(__dirname, '..', 'agreement_texts_new')
 const REPORT_JSON = path.resolve(__dirname, '..', 'harness-report.json')
 const REPORT_TEXT = path.resolve(__dirname, '..', 'harness-report.txt')
 const LOGS_DIR = path.resolve(__dirname, 'logs')
@@ -72,6 +72,63 @@ for (const outbound of CLA_OUTBOUND) {
     }
 }
 
+// Extra paths to verify URL round-trip for optional fields
+
+// medialist: documentation license
+ALL_PATHS.push({
+    label: 'CLA / outbound:same-licenses / exclusive / patent:Traditional / medialist:GFDL-1.1',
+    type: 'cla',
+    params: {
+        'fsfe-compliance': 'non-fsfe-compliance',
+        'outbound-option': 'same-licenses',
+        'agreement-exclusivity': 'exclusive',
+        'patent-option': 'Traditional',
+        'medialist': 'GFDL-1.1',
+    },
+    refPrefix: null,
+})
+
+// outboundlist: specific permitted outbound licenses (single value avoids join spacing issues)
+ALL_PATHS.push({
+    label: 'CLA / outbound:same-licenses / exclusive / patent:Traditional / outboundlist:GPL-2.0',
+    type: 'cla',
+    params: {
+        'fsfe-compliance': 'non-fsfe-compliance',
+        'outbound-option': 'same-licenses',
+        'agreement-exclusivity': 'exclusive',
+        'patent-option': 'Traditional',
+        'outboundlist': 'GPL-2.0',
+    },
+    refPrefix: null,
+})
+
+// license-policy-location: URL of the licensing policy
+ALL_PATHS.push({
+    label: 'CLA / outbound:license-policy / exclusive / patent:Traditional / with-policy-url',
+    type: 'cla',
+    params: {
+        'fsfe-compliance': 'non-fsfe-compliance',
+        'outbound-option': 'license-policy',
+        'agreement-exclusivity': 'exclusive',
+        'patent-option': 'Traditional',
+        'license-policy-location': 'https://example.org/license-policy',
+    },
+    refPrefix: null,
+})
+
+// general fields: beneficiary-name and project-name
+ALL_PATHS.push({
+    label: 'FLA / outbound:fsfe / with-general-fields',
+    type: 'fla',
+    params: {
+        'fsfe-compliance': 'fsfe-compliance',
+        'outbound-option': 'fsfe',
+        'beneficiary-name': 'FSFE e.V.',
+        'project-name': 'Reuse',
+    },
+    refPrefix: null,
+})
+
 // ---- Reference file helpers -------------------------------------------------
 
 function loadRef(refPrefix, variant, ext) {
@@ -97,8 +154,9 @@ function extractKeyPhrases(txt) {
  * structure of the current (updated) agreement-template-unified.html.
  * Returns { status, issues[], infoNotes[] }.
  *
- * opts.outboundOption — the outbound-option param for this path (e.g. 'no-commitment').
- * opts.patentOption   — the patent-option param for this path (e.g. 'Patent-Pledge'). CLA only.
+ * opts.outboundOption  — the outbound-option param for this path (e.g. 'no-commitment').
+ * opts.patentOption    — the patent-option param for this path (e.g. 'Patent-Pledge'). CLA only.
+ * opts.expectedParams  — full wizardPath.params object; used to validate the recreate URL.
  *
  * NOTE: the reference .txt files in agreement_texts/ were generated from the
  * old template (pre-legal-changes branch). They are used here as informational
@@ -181,7 +239,70 @@ function validateHtml(html, refTxt, opts) {
         }
     }
 
-    // 9. Reference file comparison — informational only, not failures.
+    // 9. Recreate URL: key params must round-trip correctly.
+    if (opts && opts.expectedParams) {
+        const recreateHref = $('section.recreate a').first().attr('href') || ''
+        if (!recreateHref) {
+            issues.push('Recreate URL missing from document')
+        } else {
+            let urlParams
+            try {
+                urlParams = new URLSearchParams(recreateHref.split('?')[1] || '')
+            } catch (e) {
+                urlParams = null
+                issues.push('Recreate URL could not be parsed: ' + recreateHref.slice(0, 80))
+            }
+            if (urlParams) {
+                // Check no placeholder text leaked into the URL
+                if (recreateHref.includes('____________________'))
+                    issues.push('Recreate URL contains emptyField placeholder (____________________)')
+                // Check these params round-trip exactly
+                const CHECK_EXACT = [
+                    'fsfe-compliance', 'outbound-option', 'agreement-exclusivity',
+                    'patent-option', 'medialist', 'beneficiary-name', 'project-name',
+                    'license-policy-location',
+                ]
+                for (const key of CHECK_EXACT) {
+                    if (!(key in opts.expectedParams)) continue
+                    const expected = opts.expectedParams[key]
+                    const actual   = urlParams.get(key)
+                    if (actual !== expected)
+                        issues.push(`Recreate URL param "${key}": expected "${expected}", got "${actual}"`)
+                }
+                // outboundlist: compare as sorted sets (the app joins with ", " on save)
+                if ('outboundlist' in opts.expectedParams) {
+                    const normalize = v => (v || '').split(',').map(s => s.trim()).filter(Boolean).sort().join(',')
+                    if (normalize(urlParams.get('outboundlist')) !== normalize(opts.expectedParams['outboundlist']))
+                        issues.push(`Recreate URL param "outboundlist": expected "${opts.expectedParams['outboundlist']}", got "${urlParams.get('outboundlist')}"`)
+                }
+            }
+        }
+    }
+
+    // 10. Content presence: values from params must appear in the document body.
+    if (opts && opts.expectedParams) {
+        const ep = opts.expectedParams
+        const normBody = bodyText.replace(/\s+/g, ' ')
+        const checkPresent = (value, label) => {
+            if (value && !normBody.includes(value))
+                issues.push(`Expected "${value}" (${label}) not found in document body`)
+        }
+        checkPresent(ep['beneficiary-name'], 'beneficiary-name')
+        checkPresent(ep['project-name'],     'project-name')
+        checkPresent(ep['license-policy-location'], 'license-policy-location')
+        // outboundlist: each selected license should appear in the outbound section
+        if (ep['outboundlist']) {
+            for (const lic of ep['outboundlist'].split(',').map(s => s.trim()).filter(Boolean))
+                checkPresent(lic, 'outboundlist entry')
+        }
+        // medialist: the license name should appear in the documentation license paragraph
+        if (ep['medialist']) {
+            for (const lic of ep['medialist'].split(',').map(s => s.trim()).filter(Boolean))
+                checkPresent(lic, 'medialist entry')
+        }
+    }
+
+    // 11. Reference file comparison — informational only, not failures (outdated reference files).
     // The reference files predate the legal-changes rewrite so differences are expected.
     if (refTxt) {
         const missing = []
@@ -378,7 +499,7 @@ describe('Agreement Chooser Harness', function () {
                     const html = await getHtmlFromModal(btn, modal, textarea)
                     logText(`${wizardPath.label} / individual HTML`, html)
                     const refTxt = loadRef(wizardPath.refPrefix, 'indiv', 'txt')
-                    const opts = { outboundOption: wizardPath.params['outbound-option'], patentOption: wizardPath.params['patent-option'] }
+                    const opts = { outboundOption: wizardPath.params['outbound-option'], patentOption: wizardPath.params['patent-option'], expectedParams: wizardPath.params }
                     const { status, issues, infoNotes } = validateHtml(html, refTxt, opts)
                     collectViewerDoc(wizardPath.label, 'individual', html, status)
                     const details = refTxt ? issues : ['(no reference txt — structural check only)', ...issues]
@@ -402,7 +523,7 @@ describe('Agreement Chooser Harness', function () {
                     const html = await getHtmlFromModal(btn, modal, textarea)
                     logText(`${wizardPath.label} / entity HTML`, html)
                     const refTxt = loadRef(wizardPath.refPrefix, 'entity', 'txt')
-                    const opts = { outboundOption: wizardPath.params['outbound-option'], patentOption: wizardPath.params['patent-option'] }
+                    const opts = { outboundOption: wizardPath.params['outbound-option'], patentOption: wizardPath.params['patent-option'], expectedParams: wizardPath.params }
                     const { status, issues, infoNotes } = validateHtml(html, refTxt, opts)
                     collectViewerDoc(wizardPath.label, 'entity', html, status)
                     const details = refTxt ? issues : ['(no reference txt — structural check only)', ...issues]
