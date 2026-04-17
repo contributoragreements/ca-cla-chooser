@@ -18,9 +18,9 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
-        password: ${{ secrets.PASSWORD }}
+        #password: ${{ secrets.PASSWORD }}
         username: ${{ secrets.USER }}
-        #key: ${{ secrets.KEY }}
+        key: ${{ secrets.KEY }}
         use_insecure_cipher: true
         cipher: diffie-hellman-group-exchange-sha256
         debug: true
