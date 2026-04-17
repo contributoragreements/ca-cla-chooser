@@ -6,10 +6,17 @@ const cheerio = require('cheerio')
 
 const BASE_URL = 'http://localhost:4000'
 const REFS_DIR = path.resolve(__dirname, '..', 'agreement_texts_new')
-const REPORT_JSON = path.resolve(__dirname, '..', 'harness-report.json')
-const REPORT_TEXT = path.resolve(__dirname, '..', 'harness-report.txt')
 const LOGS_DIR = path.resolve(__dirname, 'logs')
-const VIEWER_DATA = path.resolve(__dirname, '..', 'harness-texts.json')
+
+// When running parallel shards, each shard sets these env vars so its output
+// files don't collide with those of the other shard.  The wdio.harness.conf.js
+// onComplete hook merges the shard files into the canonical report afterwards.
+const REPORT_SUFFIX = process.env.HARNESS_REPORT_SUFFIX || ''
+const FILTER_TYPE   = process.env.HARNESS_FILTER          // 'fla' | 'cla' | undefined = all
+
+const REPORT_JSON = path.resolve(__dirname, '..', `harness-report${REPORT_SUFFIX}.json`)
+const REPORT_TEXT = path.resolve(__dirname, '..', `harness-report${REPORT_SUFFIX}.txt`)
+const VIEWER_DATA = path.resolve(__dirname, '..', `harness-texts${REPORT_SUFFIX}.json`)
 
 // Set SAVE_TEXTS=1 to write the full generated document text to tests/logs/<date>.log
 const SAVE_TEXTS = process.env.SAVE_TEXTS === '1'
@@ -475,6 +482,10 @@ function writeReports() {
 
 // ---- Test suite -------------------------------------------------------------
 
+const ACTIVE_PATHS = FILTER_TYPE
+    ? ALL_PATHS.filter(p => p.type === FILTER_TYPE)
+    : ALL_PATHS
+
 describe('Agreement Chooser Harness', function () {
     after(function () {
         writeReports()
@@ -482,13 +493,16 @@ describe('Agreement Chooser Harness', function () {
         writeViewerData()
     })
 
-    for (const wizardPath of ALL_PATHS) {
+    for (const wizardPath of ACTIVE_PATHS) {
         describe(wizardPath.label, function () {
             before(async function () {
                 await openPath(wizardPath)
             })
 
             const isFla = wizardPath.type === 'fla'
+
+            // Shared recreate URL, set by the individual HTML test and used by the round-trip test
+            let storedRecreateUrl = null
 
             // Individual document — open modal, read, close
             it(`${isFla ? 'FLA' : 'CLA'} individual HTML`, async function () {
@@ -497,6 +511,7 @@ describe('Agreement Chooser Harness', function () {
                 const textarea = isFla ? '#embed-agreement-fla'  : '#embed-agreement'
                 try {
                     const html = await getHtmlFromModal(btn, modal, textarea)
+                    storedRecreateUrl = extractRecreateUrl(html)
                     logText(`${wizardPath.label} / individual HTML`, html)
                     const refTxt = loadRef(wizardPath.refPrefix, 'indiv', 'txt')
                     const opts = { outboundOption: wizardPath.params['outbound-option'], patentOption: wizardPath.params['patent-option'], expectedParams: wizardPath.params }
@@ -620,6 +635,203 @@ describe('Agreement Chooser Harness', function () {
                     if (!e.message.startsWith('Link')) {
                         record(`${wizardPath.label} / entity link`, 'ERROR', [e.message])
                     }
+                    throw e
+                }
+            })
+
+            // Recreate URL round-trip: load the URL from the generated document and verify
+            // that each wizard page restores the correct selection / field value.
+            it('recreate URL round-trip', async function () {
+                if (!storedRecreateUrl) {
+                    record(`${wizardPath.label} / recreate URL round-trip`, 'ERROR',
+                        ['No recreate URL available — individual HTML test may have failed'])
+                    this.skip()
+                    return
+                }
+
+                const issues  = []
+                const params   = wizardPath.params
+                let recorded   = false
+
+                try {
+                    await browser.url(storedRecreateUrl)
+                    await (await $('#generalBullet')).waitForClickable({ timeout: 5000 })
+
+                    // ---- General page ----
+                    await (await $('#generalBullet')).click()
+                    await browser.pause(300)
+
+                    // FLA / CLA button active state
+                    if (params['fsfe-compliance'] === 'fsfe-compliance') {
+                        const cls = await (await $('#fsfe-compliance')).getAttribute('class')
+                        if (!cls || !cls.includes('active'))
+                            issues.push('FLA button (#fsfe-compliance) not active after recreate load')
+                    } else {
+                        const cls = await (await $('#non-fsfe-compliance')).getAttribute('class')
+                        if (!cls || !cls.includes('active'))
+                            issues.push('CLA button (#non-fsfe-compliance) not active after recreate load')
+                    }
+
+                    if (params['beneficiary-name']) {
+                        const val = await (await $('#beneficiary-name')).getValue()
+                        if (val !== params['beneficiary-name'])
+                            issues.push(`beneficiary-name: expected "${params['beneficiary-name']}", got "${val}"`)
+                    }
+
+                    if (params['project-name']) {
+                        const val = await (await $('#project-name')).getValue()
+                        if (val !== params['project-name'])
+                            issues.push(`project-name: expected "${params['project-name']}", got "${val}"`)
+                    }
+
+                    // ---- Copyright page ----
+                    await (await $('#copyrightBullet')).click()
+                    await browser.pause(300)
+
+                    // Exclusivity section visibility: FLA shows info text, CLA shows dropdown
+                    if (isFla) {
+                        if (!await (await $('#agreement-exclusivity-fsfe')).isDisplayed())
+                            issues.push('FLA exclusivity info (#agreement-exclusivity-fsfe) not visible')
+                        if (await (await $('#agreement-exclusivity-non-fsfe')).isDisplayed())
+                            issues.push('CLA exclusivity select (#agreement-exclusivity-non-fsfe) visible but should be hidden for FLA')
+                    } else {
+                        if (!await (await $('#agreement-exclusivity-non-fsfe')).isDisplayed())
+                            issues.push('CLA exclusivity select (#agreement-exclusivity-non-fsfe) not visible')
+                        if (await (await $('#agreement-exclusivity-fsfe')).isDisplayed())
+                            issues.push('FLA exclusivity info (#agreement-exclusivity-fsfe) visible but should be hidden for CLA')
+                        if (params['agreement-exclusivity']) {
+                            const val = await (await $('#agreement-exclusivity')).getValue()
+                            if (val !== params['agreement-exclusivity'])
+                                issues.push(`agreement-exclusivity: expected "${params['agreement-exclusivity']}", got "${val}"`)
+                        }
+                    }
+
+                    const outboundRadioMap = {
+                        'fsfe':           '#outbound-option-fsfe',
+                        'same-licenses':  '#outbound-option-same-licenses',
+                        'license-policy': '#outbound-option-license-policy',
+                        'same':           '#outbound-option-same',
+                        'no-commitment':  '#outbound-option-no-commitment',
+                    }
+                    const radioSel = outboundRadioMap[params['outbound-option']]
+                    if (radioSel) {
+                        const checked = await (await $(radioSel)).isSelected()
+                        if (!checked)
+                            issues.push(`outbound-option radio "${params['outbound-option']}" (${radioSel}) not checked`)
+                    }
+
+                    if (params['license-policy-location']) {
+                        const val = await (await $('#license-policy-location')).getValue()
+                        if (val !== params['license-policy-location'])
+                            issues.push(`license-policy-location: expected "${params['license-policy-location']}", got "${val}"`)
+                    }
+
+                    if (params['outboundlist']) {
+                        const expected = params['outboundlist'].split(',').map(s => s.trim()).filter(Boolean)
+                        const opts = await $$('#outboundlist option')
+                        const selected = []
+                        for (const opt of opts) {
+                            if (await opt.isSelected()) selected.push(await opt.getValue())
+                        }
+                        for (const lic of expected) {
+                            if (!selected.includes(lic))
+                                issues.push(`outboundlist: "${lic}" not selected (selected: [${selected.join(', ')}])`)
+                        }
+                    }
+
+                    if (params['medialist']) {
+                        const expected = params['medialist'].split(',').map(s => s.trim()).filter(Boolean)
+                        const opts = await $$('#medialist option')
+                        const selected = []
+                        for (const opt of opts) {
+                            if (await opt.isSelected()) selected.push(await opt.getValue())
+                        }
+                        for (const lic of expected) {
+                            if (!selected.includes(lic))
+                                issues.push(`medialist: "${lic}" not selected (selected: [${selected.join(', ')}])`)
+                        }
+                    }
+
+                    // ---- Patent page ----
+                    await (await $('#patentsBullet')).click()
+                    await browser.pause(300)
+
+                    // Patent section visibility: FLA shows info text, CLA shows dropdown
+                    if (isFla) {
+                        if (!await (await $('#patent-type-fsfe')).isDisplayed())
+                            issues.push('FLA patent info (#patent-type-fsfe) not visible')
+                        if (await (await $('#patent-type-non-fsfe')).isDisplayed())
+                            issues.push('CLA patent select (#patent-type-non-fsfe) visible but should be hidden for FLA')
+                    } else {
+                        if (!await (await $('#patent-type-non-fsfe')).isDisplayed())
+                            issues.push('CLA patent select (#patent-type-non-fsfe) not visible')
+                        if (await (await $('#patent-type-fsfe')).isDisplayed())
+                            issues.push('FLA patent info (#patent-type-fsfe) visible but should be hidden for CLA')
+                        if (params['patent-option']) {
+                            const val = await (await $('#patent-type')).getValue()
+                            if (val !== params['patent-option'])
+                                issues.push(`patent-type: expected "${params['patent-option']}", got "${val}"`)
+                        }
+                    }
+
+                    // ---- Review page ----
+                    await (await $('#reviewBullet')).click()
+                    await browser.pause(300)
+
+                    // Ensure all page-processing functions have run regardless of
+                    // whether onTabClick fired correctly for each bullet navigation.
+                    await browser.execute(() => testAllPages())
+                    await browser.pause(100)
+
+                    if (params['beneficiary-name']) {
+                        const txt = await (await $('#review-beneficiary-name')).getText()
+                        if (!txt.includes(params['beneficiary-name']))
+                            issues.push(`review-beneficiary-name: expected "${params['beneficiary-name']}", got "${txt}"`)
+                    }
+
+                    if (params['project-name']) {
+                        const txt = await (await $('#review-project-name')).getText()
+                        if (!txt.includes(params['project-name']))
+                            issues.push(`review-project-name: expected "${params['project-name']}", got "${txt}"`)
+                    }
+
+                    // FLA is always Exclusive; CLA takes the param value, defaulting to exclusive
+                    const expectedExclusivity = (params['agreement-exclusivity'] === 'non-exclusive')
+                        ? 'Non-Exclusive' : 'Exclusive'
+                    const exclReviewTxt = await (await $('#review-agreement-exclusivity')).getText()
+                    if (!exclReviewTxt.includes(expectedExclusivity))
+                        issues.push(`review-agreement-exclusivity: expected "${expectedExclusivity}", got "${exclReviewTxt}"`)
+
+                    // Outbound licenses summary: non-empty for all options except
+                    // same-licenses without a specific outboundlist (user hasn't chosen yet).
+                    const outboundReviewTxt = await (await $('#review-outbound-licenses')).getText()
+                    const sameLicensesNoList = params['outbound-option'] === 'same-licenses' && !params['outboundlist']
+                    if (!sameLicensesNoList && (!outboundReviewTxt || outboundReviewTxt.trim() === ''))
+                        issues.push('review-outbound-licenses: empty in review summary')
+
+                    if (params['medialist']) {
+                        const mediaReviewTxt = await (await $('#review-media-licenses')).getText()
+                        for (const lic of params['medialist'].split(',').map(s => s.trim()).filter(Boolean)) {
+                            if (!mediaReviewTxt.includes(lic))
+                                issues.push(`review-media-licenses: "${lic}" not found (got: "${mediaReviewTxt}")`)
+                        }
+                    }
+
+                    // Patent type review cell shows the human-readable name from the dictionary
+                    const patentParam = params['patent-option'] || 'Traditional'
+                    const expectedPatent = patentParam === 'Patent-Pledge'
+                        ? 'Patent Pledge' : 'Traditional Patent License'
+                    const patentReviewTxt = await (await $('#review-patent-type')).getText()
+                    if (!patentReviewTxt.includes(expectedPatent))
+                        issues.push(`review-patent-type: expected "${expectedPatent}", got "${patentReviewTxt}"`)
+
+                    const status = issues.length === 0 ? 'PASS' : 'FAIL'
+                    record(`${wizardPath.label} / recreate URL round-trip`, status, issues)
+                    recorded = true
+                    if (status === 'FAIL') throw new Error(issues[0])
+                } catch (e) {
+                    if (!recorded)
+                        record(`${wizardPath.label} / recreate URL round-trip`, 'ERROR', [e.message])
                     throw e
                 }
             })
