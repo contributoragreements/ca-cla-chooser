@@ -11,7 +11,7 @@ jobs:
     if: ${{ github.repository_owner == 'contributoragreements' }}
     #/* && github.event.workflow_run.conclusion == 'success' }} */
     name: deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - name: remote ssh commands
       uses: appleboy/ssh-action@master
@@ -20,10 +20,10 @@ jobs:
         port: ${{ secrets.PORT }}
         password: ${{ secrets.PASSWORD }}
         username: ${{ secrets.USER }}
-        #key: ${{ secrets.KEY }}
-        use_insecure_cipher: true
-        cipher: diffie-hellman-group-exchange-sha256
+        key: ${{ secrets.KEY }}
+        #use_insecure_cipher: true
+        #cipher: diffie-hellman-group-exchange-sha256
         debug: true
         script: |
-          cd ~/contributoragreements.org/ca-cla-chooser
+          cd /var/www/virtual/scom/contributoragreements.org/ca-cla-chooser
           git pull origin main
