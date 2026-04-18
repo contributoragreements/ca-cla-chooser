@@ -7,6 +7,7 @@
     "start": "node server.js",
     "test": "wdio wdio.conf.js",
     "serve-and-test": "concurrently --kill-others --success first \"npm start\" \"sleep 5 && npm test\"",
+    "harness": "concurrently --kill-others --success first \"npm start\" \"sleep 3 && npx wdio run wdio.harness.conf.js\"",
     "wdio": "wdio run ./wdio.conf.js"
   },
   "dependencies": {

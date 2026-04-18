@@ -22,8 +22,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22.14.0
+      - name: Generate config files
+        run: |
+          git rev-parse --short HEAD > version.log
+          echo '{"serviceUrl":"https://contributoragreements.org","urlShortener":"https://contributoragreements.org/u2s"}' > js/config.json
       - name: Install dependencies
         run: npm ci
+      - name: Generate config files
+        run: |
+          git rev-parse --short HEAD > version.log
+          echo '{"serviceUrl":"https://contributoragreements.org","urlShortener":"https://contributoragreements.org/u2s"}' > js/config.json
       - name: Install surge globally
         run: npm install -g surge
       - name: Deploy

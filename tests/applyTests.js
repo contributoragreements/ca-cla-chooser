@@ -11,17 +11,13 @@ describe('texts should exist', async function() {
         await applyPage.goThroughAll();
     });
 
-    it('all the tabs should function', async function() {
-        // FIXME add other generation steps
-        var text = await applyPage.applyResultHtmlFlaText.getValue();
-        expect(applyPage.applyResultHtmlFlaText).to.exist;
+    it('the fla html textarea should contain text', async function() {
+        const text = await applyPage.applyResultHtmlFlaText.getValue();
+        expect(text).to.be.a('string').and.not.equal('')
     })
-    it('the length of the text should exist', async function() {
-        var text = await applyPage.applyResultHtmlFlaText.getValue();
-        console.log(`ApplyPage: The length is: ${text.length}`);
-        expect(text.length).to.exist;
+
+    it('the fla html textarea should have a non-zero length', async function() {
+        const text = await applyPage.applyResultHtmlFlaText.getValue();
+        expect(text.length).to.be.greaterThan(0)
     })
 });
-
-
-

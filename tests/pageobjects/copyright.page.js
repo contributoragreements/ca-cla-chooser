@@ -1,5 +1,5 @@
 // copyright.page.js
-import Page from './page'
+const Page = require('./page')
 
 class CopyrightPage extends Page {
 
@@ -38,20 +38,18 @@ class CopyrightPage extends Page {
         await this.optionExclusiveNonExclusiveLicense.selectByAttribute('value', 'non-exclusive')
     }
 
-    // This function only accepts a string of a license from the list, so only can select one license for now
-    // Also passing licenses not in the list will fail // alternative: selectByVisibleText('GNU General Public License v3.0')
-    async setOutboundListItems(outboundlicenses = 'GPL-3.0') {
-        await this.sameLicensesList.selectByAttribute('value', outboundLicenses)
+    // Selects a single license by value from the outboundlist multi-select
+    async setOutboundListItems (outboundlicenses = 'GPL-3.0') {
+        await this.sameLicensesList.selectByAttribute('value', outboundlicenses)
     }
-    async setOutboundListCustom(outboundlicenses = 'The Best License Ever, TBLEL') {
-        await this.sameLicensesText.setValue(outboundLicenses)
+    async setOutboundListCustom (outboundlicenses = 'The Best License Ever, TBLEL') {
+        await this.sameLicensesText.setValue(outboundlicenses)
     }
-    async setLicensePolicyLocation(licensePolicyLocation = 'https://sourceproject.org/license-policy') {
-        await this.fieldLicensePolicyLocation(licensePolicyLocation)
+    async setLicensePolicyLocation (licensePolicyLocation = 'https://sourceproject.org/license-policy') {
+        await this.fieldLicensePolicyLocation.setValue(licensePolicyLocation)
     }
-    // can select one license from the documentation license list
-    async setDocumentationLicense(documentationLicense = 'CC0-1.0') { // alternative: selectByVisibleText('Creative Commons Zero v1.0 Universal')
-        await this.optionDocumentationLicense.selectByAttribute('value', documentationLicense)
+    async setDocumentationLicense (documentationLicense = 'CC0-1.0') {
+        await this.optionDocumentationLicenses.selectByAttribute('value', documentationLicense)
     }
 }
 
