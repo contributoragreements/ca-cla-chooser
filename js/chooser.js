@@ -1154,8 +1154,8 @@ function testReviewPage ()
             if ( doDebug)
                 console.log("At testReviewPage");
             // This sets the document title
-            $('#review-text-fla #tmp-title').html("Fiduciary License Agreement 2.0");
-            $('#review-text-fla-entity #tmp-title').html("Fiduciary License Agreement 2.0");
+            $('#review-text-fla #tmp-title').html("Fiduciary License Agreement 2.1");
+            $('#review-text-fla-entity #tmp-title').html("Fiduciary License Agreement 2.1");
             $('#review-text #tmp-title').html("Contributor Agreement");
             $('#review-text-entity #tmp-title').html("Contributor Agreement");
             // This shows the subtitle FIXME some of this, like '#tmp-subtitle-based' could prob be removed b/c it is never not needed
